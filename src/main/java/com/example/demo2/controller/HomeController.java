@@ -17,7 +17,7 @@ public class HomeController {
     FirebaseService firebaseService;
 
     @PostMapping("/the")
-    public String inserId(@RequestBody Board id) throws Exception{
+    public String insertId(@RequestBody Board id) throws Exception{
         return firebaseService.insertId(id);
     }
 
