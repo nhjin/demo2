@@ -3,6 +3,8 @@ package com.example.demo2.service;
 import java.util.concurrent.ExecutionException;
 
 import com.example.demo2.entity.Product;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.springframework.stereotype.Service;
 
 
@@ -25,5 +27,23 @@ public class ProductService {
 
     }
 
+    public Product getProductDetails(String name) throws ExecutionException, InterruptedException {
+
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+
+        DocumentReference documentReference = dbFirestore.collection(COLLECTION_NAME).document(name);
+
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        DocumentSnapshot document = future.get();
+
+        Product product = null;
+        if(document.exists()){
+            product = document.toObject(Product.class);
+        return product;
+        }else {
+            return null;
+        }
+    }
 
 }

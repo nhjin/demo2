@@ -1,8 +1,75 @@
-<html>
-    <head>
-    </head>
-    <body>
-    아이디 : <br><input type="text" name="id" id="id"><br>
-    <a type="button" th:href="@{/the}">확인</a>
-    </body >
-    </html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("Ready");
+
+            $("#test").mousedown(function(){
+                ProName = $("#name").val();
+                ProDescription = $("#description").val();
+                if(ProName == '' || ProDescription == ''){
+                    alert("다시 입력하세요.")
+                }else {
+                    var allData = new Object();
+                    allData.name = ProName;
+                    allData.description = ProDescription;
+
+                    // alert(JSON.stringify(allData))
+
+                    $.ajax({
+                        url:"/api/products",
+                        type:'post',
+                        data: JSON.stringify(allData),
+                        dataType: "json",
+                        contentType: 'application/json'
+                    }).done(function (){
+                        alert("전송 완료");
+                    });
+                }
+            });
+
+            $("#search").keydown(function(key) {
+                if (key.keyCode == 13) {
+                    SearchProduct();
+                }
+            });
+
+            $("#btnSearch").mousedown(function() {
+                SearchProduct();
+            });
+
+            function SearchProduct(){
+                $('#result').empty();
+                SearchTxt = $("#search").val();
+                $.ajax({
+                    url: "/api/products/" + SearchTxt,
+                    type: 'get',
+                    dataType: "json"
+                }).done(function (json){
+                    alert("완료")
+                    $('#result').append('<div class="result" id="name">'+"상품분류 : "+json.name+'</div>')
+                    $('#result').append('<div class="result" id="description">'+"상품정보 : "+json.description+'</div>')
+                }).fail(function (){
+                    alert("다시 입력하세요.")
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    상품분류 :<br>
+    <input type="text" name="name" id="name"><br>
+    상품정보 :<br>
+    <input type="text" name="description" id="description"><br>
+    <button id="test">test</button>
+    <br>
+    <br>
+    <input type="text" name="search" id="search">검색<br>
+    <button id="btnSearch">SEARCH</button>
+    <div id="result"></div>
+</body >
+</html>
