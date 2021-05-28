@@ -23,4 +23,17 @@ public class DoController {
         return "index";
     }
 
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public String home() {
+//        logger.info("Welcome home! Test!{}");
+
+        return "home";
+    }
+    @RequestMapping(value = "/about", method = RequestMethod.GET)
+    public String about() {
+//        logger.info("Welcome home! Test!{}");
+
+        return "about";
+    }
+
 }
