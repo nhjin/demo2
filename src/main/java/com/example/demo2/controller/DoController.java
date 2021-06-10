@@ -56,4 +56,12 @@ public class DoController {
 
         return "shopDetail";
     }
+
+//    @RequestMapping(value = "/recipes/{id}", method = RequestMethod.GET)
+//    public String test2(@PathVariable int id, HttpServletRequest request) {
+////        logger.info("Welcome home! Test!{}");
+//        request.setAttribute("id", id);
+//
+//        return "shopDetail";
+//    }
 }
