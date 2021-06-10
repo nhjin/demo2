@@ -1,10 +1,13 @@
 package com.example.demo2.controller;
 
+import com.example.demo2.entity.User;
 import com.example.demo2.service.FirebaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,11 +60,13 @@ public class DoController {
         return "shopDetail";
     }
 
-//    @RequestMapping(value = "/recipes/{id}", method = RequestMethod.GET)
-//    public String test2(@PathVariable int id, HttpServletRequest request) {
-////        logger.info("Welcome home! Test!{}");
-//        request.setAttribute("id", id);
-//
-//        return "shopDetail";
-//    }
+    @GetMapping("/list")
+    public String list(Model model){
+
+        model.addAttribute("user", new User());
+
+        return "list";
+    }
+
+
 }
