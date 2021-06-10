@@ -2,163 +2,128 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             console.log("Ready");
+            // SearchProduct(999999999);
 
-            $("#test").mousedown(function(){
-                ProName = $("#name").val();
-                ProDescription = $("#description").val();
-                if(ProName == '' || ProDescription == ''){
+            var foodId = $("#id").text()
+
+            $.ajax({
+                url: "/api/products/" + foodId,
+                type: 'get',
+                dataType: "json",
+                success: function (json) {
+                    // MakeDiv(json)
+                    // SearchProduct(json[2].id)
+                    console.log(json.steps[0].equipment)
+                    console.log(json.steps[0].ingredients)
+                },
+                error: function () {
                     alert("다시 입력하세요.")
-                }else {
-                    var allData = new Object();
-                    allData.name = ProName;
-                    allData.description = ProDescription;
-
-                    // alert(JSON.stringify(allData))
-
-                    $.ajax({
-                        url:"/api/products",
-                        type:'post',
-                        data: JSON.stringify(allData),
-                        dataType: "json",
-                        contentType: 'application/json'
-                    }).done(function (json){
-                        alert("전송 완료");
-                    });
                 }
             });
 
-            $("#search").keydown(function(key) {
-                if (key.keyCode == 13) {
-                    SearchProduct();
-                }
-            });
+            // $("#test").mousedown(function () {
+            //     ProName = $("#name").val();
+            //     ProDescription = $("#description").val();
+            //     if (ProName == '' || ProDescription == '') {
+            //         alert("다시 입력하세요.")
+            //     } else {
+            //         var allData = new Object();
+            //         allData.name = ProName;
+            //         allData.description = ProDescription;
+            //
+            //         // alert(JSON.stringify(allData))
+            //
+            //         $.ajax({
+            //             url: "/api/products",
+            //             type: 'post',
+            //             data: JSON.stringify(allData),
+            //             dataType: "json",
+            //             contentType: 'application/json'
+            //         }).done(function (json) {
+            //             alert("전송 완료");
+            //         });
+            //     }
+            // });
+            //
+            // $("#search").keydown(function (key) {
+            //     if (key.keyCode == 13) {
+            //         $('#result').empty();
+            //         SearchProduct(999999999);
+            //     }
+            // });
+            //
+            // $("#btnSearch").mousedown(function () {
+            //     $('#result').empty();
+            //     SearchProduct(0);
+            // });
+            //
+            // function SearchProduct(number) {
+            //     console.log(number)
+            //     $.ajax({
+            //         url: "/api/products/test/" + number,
+            //         type: 'get',
+            //         dataType: "json",
+            //         success: function (json) {
+            //             MakeDiv(json)
+            //             SearchProduct(json[2].id)
+            //         },
+            //         error: function () {
+            //             alert("다시 입력하세요.")
+            //         }
+            //     });
+            // }
+            //
+            // function MakeDiv(json) {
+            //     for (j = 0; j < json.length; j++) {
+            //         $('#result').append('<div class="result" id="name">' + "상품분류 : " + json[j].id + '</div>')
+            //         $('#result').append('<div class="result" id="description">' + "상품정보 : " + json[j].title + '</div>')
+            //         $('#result').append('<img src = ' + json[j].image + ' />')
+            //     }
+            // }
 
-            $("#btnSearch").mousedown(function() {
-                SearchProduct();
-            });
-
-            function SearchProduct(){
-                $('#result').empty();
-                SearchTxt = $("#search").val();
-                $.ajax({
-                    url: "/api/products/" + SearchTxt,
-                    type: 'get',
-                    dataType: "json"
-                }).done(function (json){
-                    alert("완료")
-                    $('#result').append('<div class="result" id="name">'+"상품분류 : "+json.name+'</div>')
-                    $('#result').append('<div class="result" id="description">'+"상품정보 : "+json.description+'</div>')
-                }).fail(function (){
-                    alert("다시 입력하세요.")
-                });
-            }
+            // function SearchProduct(){
+            //     $('#result').empty();
+            //     SearchTxt = $("#search").val();
+            //     $.ajax({
+            //         url: "/api/products/" + SearchTxt,
+            //         type: 'get',
+            //         dataType: "json"
+            //     }).done(function (json){
+            //         alert("완료")
+            //         // alert(json.length)
+            //         // alert(json[0].id)
+            //         for(i = 0; i < json.length; i++){
+            //             $('#result').append('<div class="result" id="name">'+"상품분류 : "+json[i].id+'</div>')
+            //             $('#result').append('<div class="result" id="description">'+"상품정보 : "+json[i].title+'</div>')
+            //             $('#result').append('<img src = ' + json[i].image + ' />')
+            //         }
+            //     }).fail(function (){
+            //         alert("다시 입력하세요.")
+            //     });
+            // }
         });
     </script>
 </head>
 <body>
-<div class="control-section">
-    <div class="sample-container">
-        <div class="default-section">
-            <div id="defaultRTE">
-                <p>The Rich Text Editor is a WYSIWYG ("what you see is what you get") editor useful to create and edit content and return the valid <a href='https://ej2.syncfusion.com/home/' target='_blank'>HTML markup</a> or <a href='https://ej2.syncfusion.com/home/' target='_blank'>markdown</a> of the content</p>
-
-                <p><b>Toolbar</b></p>
-                <ol>
-                    <li>
-                        <p>The Toolbar contains commands to align the text, insert a link, insert an image, insert list, undo/redo operations, HTML view, etc </p>
-                    </li>
-                    <li>
-                        <p>The Toolbar is fully customizable </p>
-                    </li>
-                </ol>
-
-                <p><b>Links</b></p>
-                <ol>
-                    <li>
-                        <p>You can insert a hyperlink with its corresponding dialog </p>
-                    </li>
-                    <li>
-                        <p>Attach a hyperlink to the displayed text. </p>
-                    </li>
-                    <li>
-                        <p>Customize the quick toolbar based on the hyperlink </p>
-                    </li>
-                </ol>
-
-                <p><b>Image.</b></p>
-                <ol>
-                    <li>
-                        <p>Allows you to insert images from an online source as well as the local computer </p>
-                    </li>
-                    <li>
-                        <p>You can upload an image </p>
-                    </li>
-                    <li>
-                        <p>Provides an option to customize the quick toolbar for an image </p>
-                    </li>
-                </ol>
-                <img alt="Logo" src="./src/rich-text-editor/images/RTEImage-Feather.png" style="width: 300px;"/>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<style>
-    .e-code-mirror::before {
-        content: '\e345';
-    }
-
-    .e-html-preview::before {
-        content: '\e350';
-    }
-
-    .CodeMirror-linenumber,
-    .CodeMirror-gutters {
-        display: none;
-    }
-
-    .sb-header {
-        z-index: 100;
-    }
-    .highcontrast .cm-s-default .cm-tag {color: #00ff00;}
-    .highcontrast .cm-s-default .cm-string {color: #ffd939;}
-    .highcontrast .cm-s-default .cm-attribute {color: #f00;}
-    .highcontrast .CodeMirror {
-        background: black;
-    }
-
-    .sb-content.e-view.hide-header {
-        top: 0 !important;
-    }
-
-    .sb-header.e-view.hide-header {
-        display: none;
-    }
-
-    .e-richtexteditor .e-rte-content .e-content pre {
-        padding: 10px;
-        background: #F4F5F7;
-    }
-    .highcontrast .e-richtexteditor .e-rte-content .e-content pre {
-        padding: 10px;
-        background: #303030;
-    }
-</style>
-    상품분류 :<br>
-    <input type="text" name="name" id="name"><br>
-    상품정보 :<br>
-    <input type="text" name="description" id="description"><br>
-    <button id="test">test</button>
-    <br>
-    <br>
-    <input type="text" name="search" id="search">검색<br>
-    <button id="btnSearch">SEARCH</button>
-    <div id="result"></div>
-</body >
+Id Test :
+<th:block th:each="userId: ${id}">
+    <a th:href="@{/(id=${userId})}"> User [[${userId}]]</a> <br/>
+    <div id="id" style="display: none">[[${id}]]</div>
+</th:block>
+<!--상품분류 :<br>-->
+<!--<input type="text" name="name" id="name"><br>-->
+<!--상품정보 :<br>-->
+<!--<input type="text" name="description" id="description"><br>-->
+<!--<button id="test">test</button>-->
+<!--<br>-->
+<!--<br>-->
+<!--<input type="text" name="search" id="search">검색<br>-->
+<!--<button id="btnSearch">SEARCH</button>-->
+<!--<div id="result"></div>-->
+</body>
 </html>
