@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <!--    <link rel='stylesheet' type='text/css' href='/resources/tutorial/css/example.css'>-->
+    <script src="config.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script>
+    function emailSignup(form){
+
+        var email=form.email.value;
+        var password=form.password.value;
+
+        //Create User with Email and Password
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(errorCode);
+            console.log(errorMessage);
+        });
+        form.submit(); //action 작동
+    }
+</script>
+<body>
+<form name="loginForm" action="/best"  method="post">
+    이메일 : <input type="text" name="email" id="email"><br>
+    이메일 중복 확인 <input type ="button" >
+    비밀번호 : <input type="password" name="password" id="password"><br>
+    <input type="button" onclick="emailSignup(this.form)" value="로그인">
+
+</form>
+
+
+</body>
+</html>
