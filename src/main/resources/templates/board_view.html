@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Title</title>
+
+  <script>
+    listA();
+
+    function listA(){
+
+      // title = $("#btitle").val();
+      // content = $("#bcontent").val();
+      //
+      // var allData = new Object();
+      // allData.btitle = title;
+      // allData.bcontent = content;
+
+      $.ajax({
+        //url:"/next/the/test",
+        url:"/next/the/ + ${getURLParams(window.location.href)['uid']}`", //글번호로 수정
+        type: 'get',
+        dataType: "json"
+      }).done(function (json){
+        alert("완료")
+        $("#btitle").html(json);
+
+        // $('#btitle').append('<div class="result" id="btitle">'+"제목 : "+json.btitle+'</div>')
+        // $('#bcontent').append('<div class="result" id="bcontent">'+"내용  "+json.bcontent+'</div>')
+      }).fail(function (){
+        alert("다시 입력하세요.")
+      });
+
+    };
+
+      </script>
+    </head>
+
+
+<body>
+
+<!--<type="readyonly" id="uid">-->
+제목<div id="btitle"></div>
+내용<input type ="text" id="bcontent">
+
+</body>
+</html>

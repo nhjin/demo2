@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="ko">-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>호호</title>
+</head>
+
+<script>
+
+</script>
+
+<body>
+
+
+<!--<span th:text="${session['uid']}" hidden id="id"></span><br/>-->
+<!--<h1>Form</h1>-->
+<form action="#" th:action="@{/uesrExtraInfo}" th:object="${user}" method="post">
+<!--    <input type="hidden" id="uid">-->
+    <p>Id: <input type="text" th:field="*{gender}"/></p>
+    <p>Message: <input type="text" th:field="*{age}"/></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+    </p>
+</form>
+<!-- session값 꼭 넣기 <input type="button" onclick="javascript:location.href='./getnutri'" value="nutri">-->
+
+</body>
+</html>
+
+<!--<span th:text="${session['uid']}"></span><br/>-->
+<!--&lt;!&ndash;<form method="post" th:action="@{/uesrExtraInfo}">&ndash;&gt;-->
+<!--<form th:object="${User}" th:action="@{/uesrExtraInfo}" method="post">-->
+<!--      &lt;!&ndash;onclick="javascript:location.href='./uesrExtraInfo'"> &ndash;&gt;-->
+<!--    <input type="submit" th:value="정보추가"> 정보추가</input> &lt;!&ndash;인풋타입으로 가야하나&ndash;&gt;-->
+<!--    성별<input type="text" th:field="*{gender}" id="gender">-->
+<!--    나이<input type="text" th:field="*{age}" id="age">-->
+<!--</form>-->
+<!--<form method="post" action="/uesrExtraInfo" >-->
+<!--    <input type="hidden" id="uid">-->
+<!--    성별<input type="text" id="gender" name="gender">-->
+<!--    나이<input type="text" id="age" name="age">-->
+<!--    <input type="submit" value="된다">-->
+<!--</form>-->
+
+
+<!--<button id="test">teset</button>-->
+<!--        onclick="javascript:location.href='./uesrExtraInfo'">test</button>-->
+
+
+<!--</form>-->
+
+<!--<span th:text="${session['uid']}"></span><br/>-->
+<!--<input type="button" value="정보추가" onclick="javascript:location.href='./uesrExtraInfo'">-->
+<!--성별<input type="text">-->
+<!--나이<input type="text">-->

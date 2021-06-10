@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function (){
+
+            var searchNum = 0;
+
+            $.ajax({
+                url: "/next/the/" + searchNum,
+                type: 'get',
+                dataType: "json"
+            }).done(function (json){
+                $("#car").val(json[0].car)
+                $("#pro").val(json[0].pro)
+                $("#fat").val(json[0].fat)
+
+            }).fail(function (){
+                alert("다시 입력하세요.")
+            });
+
+            function serchNumReset(srchNum){
+                console.log("gd")
+                searchNum = srchNum + 1;
+            }
+
+            $("#search").keydown(function(key) {
+                if (key.keyCode == 13) {
+                    SearchProduct(searchNum);
+                }
+            });
+
+            $("#btnSearch").mousedown(function() {
+                SearchProduct(searchNum);
+            });
+
+
+            function SearchProduct(searchNum){
+
+                SearchTxt = $("#search").val();
+                $.ajax({
+                    url: "/next/the/" + searchNum,
+                    type: 'get',
+                    dataType: "json"
+                }).done(function (json){
+                    i=0
+                    while(json.length) {
+                        // var str = JSON.stringify(json[i].name)
+                        console.log(json[i].name)
+                        console.log(json[i].name.includes(SearchTxt))
+                        if(json[i].name.includes(SearchTxt)) {
+                            $('#result').append('<div class="result" id="name">' + "상품분류 : " + json[i].name + '</div>')
+                            $('#result').append('<div class="result" id="description">' + "상품정보 : " + json[i].na + '</div>')
+                        }
+                        if(i == json.length-1){
+                            break
+                        }
+                        i++
+                    }
+                    $('#result').append('<button id="btnMore">MORE</button>')
+                    console.log("야")
+
+                    $("#btnMore").mousedown(function (){
+                        $(this).remove();
+                        console.log("작동해라")
+                        SearchProduct(searchNum);
+                    });
+
+                    console.log(json.length)
+                    console.log(json[0].number)
+                    searchNum = json[999].number; //담기
+                    console.log(searchNum)
+
+                    serchNumReset(searchNum);
+
+                    // passtocalculator(json)
+                    // SearchProduct(searchNum);
+                }).fail(function (){
+                    alert("다시 입력하세요.")
+                });
+            }
+
+
+            function passtocalculator(json){
+                var passdata = new Object(); //초기화
+                passdata = json;
+                $.ajax({
+                    url: "/getdata",
+                    type: 'post',
+                    data: JSON.stringify(passdata),
+                    dataType: "json",
+                    contentType: 'application/json'
+                }).done(function (json){
+                    alert("완료")
+                }).fail(function (){
+                    alert("다시 입력하세요.")
+                });
+            }
+        })
+
+    </script>
+
+</head>
+
+<body>
+
+<input type="text" name="search" id="search">검색<br>
+<button id="btnSearch">SEARCH</button>
+<div>꿩불고기</div>
+
+<!--id="btnCalc"-->
+
+<!--$("#cal").append('<p>탄수화물: <input type="" th:field="*{car}"/>' + json.car + '</p>')-->
+
+<!--$("#pro").val(json.pro)-->
+<!--$("#pro > input").attr("th:field", "json.pro")-->
+<!--$("#)-->
+<h2 id="age" th:text="${session.age}"> </h2>
+<h2 id="gender" th:text="${session.gender}"> </h2>
+<h2 id="carb" name="car" th:text="${session.car}"> </h2>
+
+<form id="cal" th:action="@{/her}" th:object="${kordata}" method="post" >
+    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>
+    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>
+    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>
+    <input type="submit" value="계산"/>
+</form>
+
+
+<!--<form id="cal" th:action="@{/getdata}" th:object="${kordata}" method="post" >-->
+<!--    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>-->
+<!--    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>-->
+<!--    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>-->
+<!--    <input type="submit" value="계산"/>-->
+<!--</form>-->
+
+<!--<form id="cal" th:action="@{/getdata}" th:object="${kordata}" method="post" >-->
+<!--    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>-->
+<!--    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>-->
+<!--    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>-->
+<!--    <input type="submit" value="계산"/>-->
+<!--</form>-->
+
+
+
+
+
+<div id="result"></div>
+</body>
+</html>

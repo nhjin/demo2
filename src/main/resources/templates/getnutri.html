@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <meta charset="UTF-8">
+</head>
+<script>
+    $(document).ready(function (){
+
+        var age = $("#age").html(); // session
+        var gender = $("#gender").html();
+        console.log("된건가요?" + age)
+
+        $.ajax({
+            url: "/next/get/"+gender+"/"+age,
+            type: "get",
+            dataType: 'json'
+        }).done(function (json){
+            console.log("될거야")
+            $("#car").val(json.car)
+            $("#pro").val(json.pro)
+            $("#fat").val(json.pro)
+        }).fail(function (er){
+            console.log(er)
+        })
+    });
+</script>
+
+<h2 id="age" th:text="${session.age}"> </h2>
+<h2 id="gender" th:text="${session.gender}"> </h2>
+
+<body>
+
+
+<form id="userinfo" th:action="@{/getdata}" th:object="${nutrition}" method="post">
+    <h2 id="uid" th:text="${session.uid}"> </h2>
+    <p> <input type="text" th:field="*{car}" id="car"/></p>
+    <p> <input type="text" id="pro" th:field="*{pro}"/></p>
+    <p> <input type="text" id="fat" th:field="*{fat}"/></p>
+<!--    <p> <input type="text" id="kcal" th:field="*{kcal}"/></p>-->
+<!--    <p> <input type="text" id="na" th:field="*{na}"/></p>-->
+    <p><input type="submit" value="Submit"/>
+</form>
+</body>
+</html>

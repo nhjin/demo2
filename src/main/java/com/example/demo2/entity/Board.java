@@ -2,58 +2,36 @@ package com.example.demo2.entity;
 
 public class Board {
 
-    private String id;
 
-    public String getId() {
-        return id;
+    private String bmemo;
+    private String bcontent;
+    private String btitle;
+    private String uid;
+    private String no; //글번호 증가
+
+
+    public String getBcontent() {
+        return bcontent;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setBcontent(String bcontent) {
+        this.bcontent = bcontent;
     }
-//    private String brddate;
-//    private String brdmemo;
-//    private String brdno;
-//    private String brdtitle;
-//    private String brdwriter;
-//
-//    public String getBrddate() {
-//        return brddate;
-//    }
-//
-//    public void setBrddate(String brddate) {
-//        this.brddate = brddate;
-//    }
-//
-//    public String getBrdmemo() {
-//        return brdmemo;
-//    }
-//
-//    public void setBrdmemo(String brdmemo) {
-//        this.brdmemo = brdmemo;
-//    }
-//
-//    public String getBrdno() {
-//        return brdno;
-//    }
-//
-//    public void setBrdno(String brdno) {
-//        this.brdno = brdno;
-//    }
-//
-//    public String getBrdtitle() {
-//        return brdtitle;
-//    }
-//
-//    public void setBrdtitle(String brdtitle) {
-//        this.brdtitle = brdtitle;
-//    }
-//
-//    public String getBrdwriter() {
-//        return brdwriter;
-//    }
-//
-//    public void setBrdwriter(String brdwriter) {
-//        this.brdwriter = brdwriter;
-//    }
+
+    public String getBtitle() {
+        return btitle;
+    }
+
+    public void setBtitle(String btitle) {
+        this.btitle = btitle;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
 }

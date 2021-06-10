@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <meta charset="UTF-8">
+</head>
+<script>
+    $(document).ready(function (){
+
+        var uid = $("#uid").html(); // session
+        console.log("된건가요?" + uid)
+
+        $.ajax({
+            url: "/next/get/" + uid,
+            type: "get",
+            dataType: 'json'
+        }).done(function (json){
+            console.log("될거야")
+            $("#gender").val(json.gender)
+            $("#age").val(json.age)
+        }).fail(function (er){
+            console.log(er)
+        })
+    });
+
+</script>
+<!--    <title>Title</title>-->
+<!--<h2 id="uid" th:text="${session.uid}"> </h2>-->
+<!--<input type="text" id="gender">-->
+<!--<input type="text" id="age">-->
+
+
+<form id="userinfo" th:action="@{/puinfo}" th:object="${user}" method="post">
+<h2 id="uid" th:text="${session.uid}"> </h2>
+    <p> <input type="text" th:field="*{gender}" id="gender"/></p>
+    <p> <input type="text" id="age" th:field="*{age}"/></p>
+    <p><input type="submit" value="Submit"/>
+</form>
+</head>
+<body>
+</body>
+</html>
