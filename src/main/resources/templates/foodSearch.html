@@ -7,72 +7,128 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function (){
+        var selectedFoodsArr = [];
+        var selectedPro = 0;
+        var selectedCar = 0;
+        var selectedFat = 0;
+
+        var globJason = [];
+
+        $(document).ready(function () {
 
             var searchNum = 0;
+            var selectedNum = 0;
 
             $.ajax({
                 url: "/next/the/" + searchNum,
                 type: 'get',
                 dataType: "json"
-            }).done(function (json){
-                $("#car").val(json[0].car)
-                $("#pro").val(json[0].pro)
-                $("#fat").val(json[0].fat)
-
-            }).fail(function (){
+            }).done(function (json) {
+                /*
+                                $("#car").val(json[i].car)
+                                $("#pro").val(json[i].pro)
+                                $("#fat").val(json[i].fat)
+                */
+            }).fail(function () {
                 alert("다시 입력하세요.")
             });
 
-            function serchNumReset(srchNum){
+            function serchNumReset(srchNum) {
                 console.log("gd")
                 searchNum = srchNum + 1;
             }
 
-            $("#search").keydown(function(key) {
+            $("#search").keydown(function (key) {
                 if (key.keyCode == 13) {
                     SearchProduct(searchNum);
                 }
             });
 
-            $("#btnSearch").mousedown(function() {
+            $("#btnSearch").mousedown(function () {
                 SearchProduct(searchNum);
             });
 
+            $(".foodBtn").mousedown(function (obj) {
+                console.log($(obj).attr("id"));
+                var foodId = $(obj).attr("id");
 
-            function SearchProduct(searchNum){
+                alert(foodId);
+                fnAddFoods(foodId);
+            });
+
+            function SearchProduct(searchNum) {
+                //초기화
+                selectedPro = 0;
+                selectedCar = 0;
+                selectedFat = 0;
+                $("#pro").val(selectedPro);
+                $("#car").val(selectedCar);
+                $("#fat").val(selectedFat);
+                $("#selFoodNm").text("선택한 음식 : ");
 
                 SearchTxt = $("#search").val();
+                console.log(SearchTxt);
                 $.ajax({
                     url: "/next/the/" + searchNum,
                     type: 'get',
                     dataType: "json"
-                }).done(function (json){
-                    i=0
+                }).done(function (json) {
+                    var i = 0;
+                    globJason = json;
+
+                    // *  $('#result')
+                    // * 여기다가 div 안에 있는 텍스트 타 지워버리는걸 만드세요~!
+
+                    // console.log(json[0]);
+                    //이름으로 검색,
+                    //인덱스 값
+
                     while(json.length) {
                         // var str = JSON.stringify(json[i].name)
-                        console.log(json[i].name)
-                        console.log(json[i].name.includes(SearchTxt))
+                        //console.log(json[i].name)
+                        //console.log(json[i].name.includes(SearchTxt))
+
                         if(json[i].name.includes(SearchTxt)) {
-                            $('#result').append('<div class="result" id="name">' + "상품분류 : " + json[i].name + '</div>')
-                            $('#result').append('<div class="result" id="description">' + "상품정보 : " + json[i].na + '</div>')
+                            $('#result').append('<button class="foodBtn" id="' + json[i].number + '" onclick="fnAddFoods('+ json[i].number +')"> 선택 </button>');
+                            $('#result').append('<div class="result" id="name">' + "음식이름 : " + json[i].name + '</div>');
+                            $('#result').append('<div class="result" id="description">' + "탄수화물 : " + json[i].car + " 단백질 : " + json[i].pro + " 지방 : " + json[i].fat + '</div>');
                         }
-                        if(i == json.length-1){
-                            break
+                        if(i == json.length - 1){
+                            break;
                         }
-                        i++
+                        i++;
                     }
                     $('#result').append('<button id="btnMore">MORE</button>')
                     console.log("야")
 
-                    $("#btnMore").mousedown(function (){
+                    /*i = 0;
+                    while (json.length) {
+                        // var str = JSON.stringify(json[i].name)
+                        // console.log(json[i].name)
+                        // console.log(json[i].name.includes(SearchTxt))
+
+                        if (json[i].name.includes(SearchTxt)) {
+                            console.log(json[i]);
+                            $('#fat').val(json[i].fat);
+                            $('#pro').val(json[i].pro);
+                            $('#car').val(json[i].car);
+                        }
+                        if (i == json.length - 1) {
+                            break;
+                        }
+                        i++;
+                    }*/
+                    $('#result').append('<button id="btnMore">MORE</button>')
+                    ///*******여기다가 리셋버튼 한 번 만들어보고 취소버튼도 만들어보고...이거 한 번 츄라이는 해보자...근데 될란가 모르겠는데 또... 그...아...? 어..그래...
+
+                    $("#btnMore").mousedown(function () {
                         $(this).remove();
                         console.log("작동해라")
                         SearchProduct(searchNum);
                     });
 
                     console.log(json.length)
-                    console.log(json[0].number)
+                    //console.log(json[0].number)
                     searchNum = json[999].number; //담기
                     console.log(searchNum)
 
@@ -80,13 +136,12 @@
 
                     // passtocalculator(json)
                     // SearchProduct(searchNum);
-                }).fail(function (){
+                }).fail(function () {
                     alert("다시 입력하세요.")
                 });
             }
 
-
-            function passtocalculator(json){
+            function passtocalculator(json) {
                 var passdata = new Object(); //초기화
                 passdata = json;
                 $.ajax({
@@ -95,12 +150,28 @@
                     data: JSON.stringify(passdata),
                     dataType: "json",
                     contentType: 'application/json'
-                }).done(function (json){
+                }).done(function (json) {
                     alert("완료")
-                }).fail(function (){
+                }).fail(function () {
                     alert("다시 입력하세요.")
                 });
             }
+
+            function fnAddFoods(foodId) {
+                selectedFoodsArr.push(foodId);
+
+                selectedPro += json[foodId].pro;
+                selectedCar += json[foodId].car;
+                selectedFat += json[foodId].fat;
+
+                $("#pro").val(selectedPro);
+                $("#car").val(selectedCar);
+                $("#fat").val(selectedFat);
+
+                $("#selFoodNm").append(json[foodId].name + " ");
+            }
+
+
         })
 
     </script>
@@ -111,45 +182,36 @@
 
 <input type="text" name="search" id="search">검색<br>
 <button id="btnSearch">SEARCH</button>
-<div>꿩불고기</div>
+<!--<div>꿩불고기</div>-->
 
-<!--id="btnCalc"-->
-
-<!--$("#cal").append('<p>탄수화물: <input type="" th:field="*{car}"/>' + json.car + '</p>')-->
-
-<!--$("#pro").val(json.pro)-->
-<!--$("#pro > input").attr("th:field", "json.pro")-->
-<!--$("#)-->
-<h2 id="age" th:text="${session.age}"> </h2>
-<h2 id="gender" th:text="${session.gender}"> </h2>
-<h2 id="carb" name="car" th:text="${session.car}"> </h2>
-
-<form id="cal" th:action="@{/her}" th:object="${kordata}" method="post" >
-    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>
-    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>
-    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>
+<!--<h2 id="age" th:text="${session.age}"> </h2>-->
+<!--<h2 id="gender" th:text="${session.gender}"> </h2>-->
+<!--<h2 id="carb" name="car" th:text="${session.car}"> </h2>-->
+<p id="selFoodNm">선택한 음식 : </p>
+<form id="cal" th:action="@{/her}" th:object="${kordata}" method="post">
+    <p>탄수화물 : <input id="car" name="car" type="text" th:field="*{CAR}"/></p>
+    <p>단백질 : <input id="pro" name="pro" type="text" th:field="*{PRO}"/></p>
+    <p>지방 : <input id="fat" name="car" type="text" th:field="*{FAT}"/></p>
     <input type="submit" value="계산"/>
 </form>
-
-
-<!--<form id="cal" th:action="@{/getdata}" th:object="${kordata}" method="post" >-->
-<!--    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>-->
-<!--    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>-->
-<!--    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>-->
-<!--    <input type="submit" value="계산"/>-->
-<!--</form>-->
-
-<!--<form id="cal" th:action="@{/getdata}" th:object="${kordata}" method="post" >-->
-<!--    <p>탄수화물 : <input id="car" name = "car" type="text" th:field="*{CAR}"/></p>-->
-<!--    <p>단백질 : <input id="pro" name = "pro" type="text" th:field="*{PRO}"/></p>-->
-<!--    <p>지방 : <input id="fat"  name = "car" type="text" th:field="*{FAT}"/></p>-->
-<!--    <input type="submit" value="계산"/>-->
-<!--</form>-->
-
-
-
-
-
 <div id="result"></div>
+
+<script>
+    function fnAddFoods(foodId) {
+        alert(globJason[foodId].name);
+        selectedFoodsArr.push(foodId);
+
+        selectedPro += Number(globJason[foodId].pro);
+        selectedCar += Number(globJason[foodId].car);
+        selectedFat += Number(globJason[foodId].fat);
+
+        $("#pro").val(selectedPro);
+        $("#car").val(selectedCar);
+        $("#fat").val(selectedFat);
+
+        $("#selFoodNm").append(globJason[foodId].name + " ");
+    }
+</script>
+
 </body>
 </html>

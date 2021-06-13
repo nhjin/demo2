@@ -2,42 +2,67 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://thymeleaf.org">
 <head>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
     <meta charset="UTF-8">
 </head>
 <script>
-    $(document).ready(function (){
+    $(document).ready(function () {
 
-        var uid = $("#uid").html(); // session
+        var uid = $("#uid").html() // session
         console.log("된건가요?" + uid)
 
         $.ajax({
-            url: "/next/get/" + uid,
+            url: "/next/get/"+uid,
             type: "get",
             dataType: 'json'
-        }).done(function (json){
+        }).done(function (json) {
             console.log("될거야")
             $("#gender").val(json.gender)
             $("#age").val(json.age)
-        }).fail(function (er){
+        }).fail(function (er) {
             console.log(er)
         })
+
     });
 
-</script>
-<!--    <title>Title</title>-->
-<!--<h2 id="uid" th:text="${session.uid}"> </h2>-->
-<!--<input type="text" id="gender">-->
-<!--<input type="text" id="age">-->
+    // if($("#age").html() == null) {
 
+    window.onload = function () {
+        var auto = setTimeout(function () {
+            autoRefresh();
+        }, 100);
+
+        function submitform() {
+            document.getElementById("userinfo").submit();
+        }
+
+        function autoRefresh() {
+            clearTimeout(auto);
+            auto = setTimeout(function () {
+                submitform();
+                autoRefresh();
+            }, 4000);
+        }
+    }
+
+
+</script>
+
+</head>
+
+<body>
+
+<!--<h2  th:text="${session.age}"> </h2>-->
+<!--<h2  th:text="${session.gender}"> </h2>-->
 
 <form id="userinfo" th:action="@{/puinfo}" th:object="${user}" method="post">
-<h2 id="uid" th:text="${session.uid}"> </h2>
-    <p> <input type="text" th:field="*{gender}" id="gender"/></p>
-    <p> <input type="text" id="age" th:field="*{age}"/></p>
-    <p><input type="submit" value="Submit"/>
+    <p><div style="display: none;" id="uid" th:text="${session.uid}"></div></p>
+    <p><input type="hidden" id="gender" th:field="*{gender}"/></p>
+    <p><input type="hidden" id="age" th:field="*{age}"/></p>
+    <!--    <p><input type="submit" value="Submit"/>-->
+
+
 </form>
-</head>
-<body>
+
 </body>
 </html>
