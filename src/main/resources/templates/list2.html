@@ -1,14 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var car = $("#carCal").html();
+            var pro = $("#proCal").html();
+            var fat = $("#fatCal").html();
+
+            $.ajax({
+                url: "/api/calc/"+car+"/"+pro+"/"+fat,
+                type: 'get',
+                dataType: "json"
+            }).done(function (json) {
+                var i = 0;
+                while(json.length) {
+
+                    $("#id").val(json[i].id)
+                    console.log(json)
+
+                    if (i == json.length - 1) {
+                        break;
+                    }
+                    i++;
+                }
+            }).fail(function () {
+                alert("다시 입력하세요.")
+            });
+
+        });
+    </script>
+
 <body>
-<!--<h1>Result</h1>-->
-<!--<p th:text="'id: ' + ${user.age}" />-->
-<!--<p th:text="'content: ' + ${user.gender}" />-->
-<!--<a href="/greeting">Submit another message</a>-->
-리스트투에서 버튼으로 foodsearch 만들기
-<input type="button" onclick="javascript:location.href='./her'" value="하하">
-<h2 id="CAR" name="CAR" th:text="${session.CAR}"> </h2>
+<!--<input type="button" onclick="javascript:location.href='./her'" value="하하">-->
+
+<h2 id="carCal" th:text="${session.carCal}"></h2>
+<h2 id="proCal" th:text="${session.proCal}"></h2>
+<h2 id="fatCal" th:text="${session.fatCal}"></h2>
+
+<form id="result" th:action="@{/result}" th:object="${result}" method="post">
+    <p><input id="id" name="id" th:field="*{ID}"/></p>
+</form>
+
 </body>
 </html>
