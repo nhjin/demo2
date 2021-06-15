@@ -2795,6 +2795,37 @@
         }
     </style>
 </head>
+<script>
+    $(document).ready(function () {
+
+        $(".headerProductSearchContent").mousedown(function (){
+            console.log('hi')
+            $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
+            $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
+            $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
+        });
+
+        $('html').mousedown(function(e) {
+            if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+            }
+
+            if(!($(e.target).hasClass("headerProductSearchContent") || $(e.target).hasClass("searchPro"))) {
+                $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child')
+                $(".headerProductSearchContent").attr('class', 'headerProductSearchContent')
+                $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child')
+            }
+        });
+
+        $(".searchPro").keydown(function (key) {
+            if (key.keyCode == 13) {
+                let searchText = $(this).val()
+
+                location = "./search/" + searchText
+            }
+        });
+    });
+</script>
 <div class="hide">
     <div id="data_div" data-memberNo="165596" data-id="" data-userName=""
          data-sitePlan="trial" data-ownerId=""
@@ -3003,7 +3034,7 @@
                             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                                  data-type="icon"></div>
                             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)">
+                                <input id="searchPro" class="searchPro">
                             </form>
                         </div>
                         <span class="headerProductSearchContent" data-type="english">SEARCH</span>
@@ -3017,14 +3048,15 @@
                          data-type="icon"></div>
                     <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                          data-type="icon-snowman"></div>
-                </a><a id="headerCart" class="headerCart desktop site-element-child">
-                    <span class="headerCartContent" data-type="english">CART</span>
-                    <span class="headerCartContent" data-type="korean">장바구니</span>
-                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                         data-type="icon"></div>
-                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                         data-type="icon-bag"></div>
                 </a>
+                    <!--                    <a id="headerCart" class="headerCart desktop site-element-child">-->
+                    <!--                    <span class="headerCartContent" data-type="english">CART</span>-->
+                    <!--                    <span class="headerCartContent" data-type="korean">장바구니</span>-->
+                    <!--                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon"></div>-->
+                    <!--                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon-bag"></div>-->
+                    <!--                </a>-->
                 </div>
 
 
@@ -3085,8 +3117,7 @@
             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                  data-type="icon"></div>
             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)"
-                       placeholder="검색">
+                <input >
             </form>
             <div class="closeSearchBar-btn icomoon-ic-close-small systemIcon systemIconWeight_none"></div>
         </div>
@@ -3176,14 +3207,15 @@
                              data-type="icon"></div>
                         <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                              data-type="icon-snowman"></div>
-                    </a><a id="headerCart" class="headerCart desktop site-element-child">
-                        <span class="headerCartContent" data-type="english">CART</span>
-                        <span class="headerCartContent" data-type="korean">장바구니</span>
-                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                             data-type="icon"></div>
-                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                             data-type="icon-bag"></div>
                     </a>
+<!--                        <a id="headerCart" class="headerCart desktop site-element-child">-->
+<!--                        <span class="headerCartContent" data-type="english">CART</span>-->
+<!--                        <span class="headerCartContent" data-type="korean">장바구니</span>-->
+<!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon"></div>-->
+<!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon-bag"></div>-->
+<!--                    </a>-->
                     </div>
 
 
@@ -3341,7 +3373,7 @@
                          data-itemNo='25397884' cid='item25397884'>
                         <div id='itemElement25397884' class='item-element'>
                             <div class='galleryListDiv hover_magnificationEffect linkEffect ratio-3to2 borderMargin'><div class='galleryWrapper image' data-gallerySequence='0'><a
-                                        href="https://www.sixshop.com/display/error?handle=goToHomeUrl&amp;errorType=NOT_EXIST_PRODUCT&amp;locale=ko&amp;siteDomainAddress=https%3A%2F%2Fwww.sixshop.com%2Ftemeraire97"
+                                        href="home/flexitarian"
                                         target="_self" style="width:100%;height:100%;">
                                     <div class='galleryThumbnail'>
                                         <div class='galleryThumbnailContent'
@@ -3358,7 +3390,7 @@
                                         </div>
                                     </div>
                                 </a></div><div class='galleryWrapper image' data-gallerySequence='1'><a
-                                        href="https://www.sixshop.com/display/error?handle=goToHomeUrl&amp;errorType=NOT_EXIST_PRODUCT&amp;locale=ko&amp;siteDomainAddress=https%3A%2F%2Fwww.sixshop.com%2Ftemeraire97"
+                                        href="home/Pescetarian"
                                         target="_self" style="width:100%;height:100%;">
                                     <div class='galleryThumbnail'>
                                         <div class='galleryThumbnailContent'
@@ -3375,7 +3407,7 @@
                                         </div>
                                     </div>
                                 </a></div><div class='galleryWrapper image' data-gallerySequence='2'><a
-                                        href="https://www.sixshop.com/display/error?handle=goToHomeUrl&amp;errorType=NOT_EXIST_PRODUCT&amp;locale=ko&amp;siteDomainAddress=https%3A%2F%2Fwww.sixshop.com%2Ftemeraire97"
+                                        href="home/Vegetarian"
                                         target="_self" style="width:100%;height:100%;">
                                     <div class='galleryThumbnail'>
                                         <div class='galleryThumbnailContent'
@@ -3392,7 +3424,7 @@
                                         </div>
                                     </div>
                                 </a></div><div class='galleryWrapper image' data-gallerySequence='3'><a
-                                        href="https://www.sixshop.com/display/error?handle=goToHomeUrl&amp;errorType=NOT_EXIST_PRODUCT&amp;locale=ko&amp;siteDomainAddress=https%3A%2F%2Fwww.sixshop.com%2Ftemeraire97"
+                                        href="home/vegan"
                                         target="_self" style="width:100%;height:100%;">
                                     <div class='galleryThumbnail'>
                                         <div class='galleryThumbnailContent'

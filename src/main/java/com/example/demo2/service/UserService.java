@@ -1,6 +1,7 @@
 package com.example.demo2.service;
 
 import com.example.demo2.entity.Nutrition;
+import com.example.demo2.entity.PersonNutrition;
 import com.example.demo2.entity.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
@@ -63,7 +64,7 @@ public class UserService {
 
     //연령별 성별 영양소 가져오기
 
-    public Nutrition getNutrition(String gender, int age) {
+    public PersonNutrition getNutrition(String gender, int age) {
 
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference documentReference = firestore.collection(gender).document(String.valueOf(age));
@@ -78,9 +79,9 @@ public class UserService {
             e.printStackTrace();
         }
 
-        Nutrition nutrition = null;
+        PersonNutrition nutrition = null;
         if (document.exists()) {
-            nutrition = document.toObject(Nutrition.class);
+            nutrition = document.toObject(PersonNutrition.class);
             return nutrition;
         } else {
             return null;

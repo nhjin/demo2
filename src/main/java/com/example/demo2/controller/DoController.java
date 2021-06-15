@@ -60,6 +60,12 @@ public class DoController {
 
         return "about";
     }
+    @RequestMapping(value = "/home/{category}", method = RequestMethod.GET)
+    public String setCategory(@PathVariable String category, HttpSession session) {
+//        logger.info("Welcome home! Test!{}");
+//        session.setAttribute("category", category);
+        return "redirect:/recipes?category=" + category;
+    }
     @RequestMapping(value = "/recipes", method = RequestMethod.GET)
     public String recipe() {
 //        logger.info("Welcome home! Test!{}");
@@ -72,6 +78,13 @@ public class DoController {
         request.setAttribute("id", id);
 
         return "shopDetail";
+    }
+    @RequestMapping(value = "/search/{search}", method = RequestMethod.GET)
+    public String search(@PathVariable String search, HttpServletRequest request) {
+//        logger.info("Welcome home! Test!{}");
+        request.setAttribute("search", search);
+
+        return "search";
     }
 
     //회원가입 구글계정

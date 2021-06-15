@@ -80,11 +80,12 @@ public class HomeController {
     //영양소
 
     @GetMapping("/get/{gender}/{age}")
-    public Nutrition getNutrition(@PathVariable String gender, @PathVariable int age) throws ExecutionException, InterruptedException {
+    public PersonNutrition getNutrition(@PathVariable String gender, @PathVariable int age) throws ExecutionException, InterruptedException {
 
         int Age = 0;
 
         //int[] ages = {12, 14, 15, 18, 19, 29, 30, 49, 50, 64, 65, 74, 75};
+//        System.out.println("tlqkf : " + gender);
 
         if (gender.equals("Male")) {
             if (age >= 12 && age <= 14) {

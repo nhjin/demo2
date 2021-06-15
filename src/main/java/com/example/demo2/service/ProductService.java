@@ -41,21 +41,68 @@ public class ProductService {
 
     }
 
-    public List<Flex> getProducts(String value) throws ExecutionException, InterruptedException {
+//    public List<Flex> searchProducts(String searchTxt) throws ExecutionException, InterruptedException {
+//
+//        String value = "";
+//
+//        if((searchTxt.contains("flex") || searchTxt.contains("Flex"))){
+//            value = "flexitarian";
+//        }else if((searchTxt.contains("pesce") || searchTxt.contains("Pesce") || searchTxt.contains("fish") || searchTxt.contains("Fish"))){
+//            value = "Pescetarian";
+//        }else if((searchTxt.contains("vege") || searchTxt.contains("Vege"))){
+//            value = "Vegetarian";
+//        }else if((searchTxt.contains("vegan") || searchTxt.contains("Vegan"))){
+//            value = "vegan";
+//        }else {
+//            value = "recipe";
+//        }
+//
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//
+//        Iterable<DocumentReference> documentReference = dbFirestore.collection(value).listDocuments();
+//        Iterator<DocumentReference> iterator = documentReference.iterator();
+//
+//        List<Flex> productList = new ArrayList<>();
+//        Flex product = null;
+//
+//        while (iterator.hasNext()) {
+//            DocumentReference documentReference1 = iterator.next();
+//            ApiFuture<DocumentSnapshot> future = documentReference1.get();
+//            DocumentSnapshot document = future.get();
+//
+//            product = document.toObject(Flex.class);
+//            productList.add(product);
+//        }
+//        return productList;
+//    }
+
+    public List<Flex> searchProducts(String searchTxt) throws ExecutionException, InterruptedException {
+
+        String value = "";
+
+        if((searchTxt.contains("flex") || searchTxt.contains("Flex"))){
+            value = "flexitarian";
+        }else if((searchTxt.contains("pesce") || searchTxt.contains("Pesce"))){
+            value = "Pescetarian";
+        }else if((searchTxt.contains("vege") || searchTxt.contains("Vege"))){
+            value = "Vegetarian";
+        }else if((searchTxt.contains("vegan") || searchTxt.contains("Vegan"))){
+            value = "vegan";
+        }else {
+            value = "recipe";
+        }
 
         Firestore dbFirestore = FirestoreClient.getFirestore();
 
-        Iterable<DocumentReference> documentReference = dbFirestore.collection(value).listDocuments();
-        Iterator<DocumentReference> iterator = documentReference.iterator();
+        CollectionReference reference = dbFirestore.collection(value);
+
+        Query query = reference.orderBy("id", Query.Direction.DESCENDING);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
         List<Flex> productList = new ArrayList<>();
         Flex product = null;
 
-        while (iterator.hasNext()) {
-            DocumentReference documentReference1 = iterator.next();
-            ApiFuture<DocumentSnapshot> future = documentReference1.get();
-            DocumentSnapshot document = future.get();
-
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
             product = document.toObject(Flex.class);
             productList.add(product);
         }
@@ -74,9 +121,28 @@ public class ProductService {
 
         FlexDetail product = null;
 
-
         if (document.exists()) {
             product = document.toObject(FlexDetail.class);
+            return product;
+        } else {
+            return null;
+        }
+    }
+
+    public Flex getProductCheck(String category, String id) throws ExecutionException, InterruptedException {
+
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+
+        DocumentReference documentReference = dbFirestore.collection(category).document(id);
+
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        DocumentSnapshot document = future.get();
+
+        Flex product = null;
+
+        if (document.exists()) {
+            product = document.toObject(Flex.class);
             return product;
         } else {
             return null;
@@ -98,7 +164,6 @@ public class ProductService {
         Flex product = null;
 
         for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-//                System.out.println(document.getId());
             product = document.toObject(Flex.class);
             productList.add(product);
         }

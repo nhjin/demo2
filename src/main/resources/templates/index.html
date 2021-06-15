@@ -8,23 +8,27 @@
         $(document).ready(function () {
             console.log("Ready");
             // SearchProduct(999999999);
-
-            var foodId = $("#id").text()
-
-            $.ajax({
-                url: "/api/products/" + foodId,
-                type: 'get',
-                dataType: "json",
-                success: function (json) {
-                    // MakeDiv(json)
-                    // SearchProduct(json[2].id)
-                    console.log(json.steps[0].equipment)
-                    console.log(json.steps[0].ingredients)
-                },
-                error: function () {
-                    alert("다시 입력하세요.")
+            $(".searchPro").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    console.log($(".searchPro").val())
+                    // alert($('div[contenteditable=plaintext-only]').text())
                 }
             });
+
+            // $.ajax({
+            //     url: "/api/products/" + foodId,
+            //     type: 'get',
+            //     dataType: "json",
+            //     success: function (json) {
+            //         // MakeDiv(json)
+            //         // SearchProduct(json[2].id)
+            //         console.log(json.steps[0].equipment)
+            //         console.log(json.steps[0].ingredients)
+            //     },
+            //     error: function () {
+            //         alert("다시 입력하세요.")
+            //     }
+            // });
 
             // $("#test").mousedown(function () {
             //     ProName = $("#name").val();
@@ -110,11 +114,12 @@
     </script>
 </head>
 <body>
-Id Test :
-<th:block th:each="userId: ${id}">
-    <a th:href="@{/(id=${userId})}"> User [[${userId}]]</a> <br/>
-    <div id="id" style="display: none">[[${id}]]</div>
-</th:block>
+<input class="searchPro">
+<!--Id Test :-->
+<!--<th:block th:each="userId: ${id}">-->
+<!--    <a th:href="@{/(id=${userId})}"> User [[${userId}]]</a> <br/>-->
+<!--    <div id="id" style="display: none">[[${id}]]</div>-->
+<!--</th:block>-->
 <!--상품분류 :<br>-->
 <!--<input type="text" name="name" id="name"><br>-->
 <!--상품정보 :<br>-->

@@ -11,6 +11,7 @@ public class FlexDetail {
     private String title;
     private ArrayList<Object> ingredients;
     private ArrayList<Object> steps;
+    private String summary;
 
     public int getId() {
         return id;
@@ -50,5 +51,13 @@ public class FlexDetail {
 
     public void setSteps(ArrayList<Object> steps) {
         this.steps = steps;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

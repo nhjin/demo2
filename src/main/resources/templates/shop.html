@@ -2823,7 +2823,25 @@
 <script>
     $(document).ready(function () {
         console.log("Ready!");
-        var Category = "";
+
+        let selectCategory = $('.productListFilter-navi')
+
+        // alert(selectCategory.length)
+        selectCategory.each(function (i){
+            if((($(this).text()).toUpperCase()).indexOf("[[${param.category}]]".toUpperCase()) != -1){
+                $('.productListFilter-navi').attr('class', 'productListFilter-navi')
+                $(this).attr('class', 'productListFilter-navi now')
+                console.log($(this).text())
+            }
+        });
+
+        let Category = "";
+        if("[[${param.category}]]" == ""){
+            Category = "recipe";
+        }else {
+            Category = "[[${param.category}]]";
+        }
+
         var idNum = 999999999;
 
         function setIdNum(category, num) {
@@ -2831,7 +2849,7 @@
             idNum = num;
         }
 
-        SearchProduct("recipe", idNum);
+        SearchProduct(Category, idNum);
 
         var page = 0;
 
@@ -2867,17 +2885,18 @@
                 dataType: "json",
                 success: function (json) {
                     MakeDiv(json)
-                    setIdNum(category, json.pop().id)
-                    // try{
-                    //     json[5].id
-                    //     console.log('False')
-                    // }catch{
-                    //     console.log('True')
-                    // }
-                    // SearchProduct(category, json[2].id)
+                    try{
+                        setIdNum(category, json.pop().id)
+                    }catch{
+                        if($('#done').length > 0){
+                            $('#done').remove()
+                            $("#itemElement25397969").append("<hr id='done'>");
+                        }else{
+                            $("#itemElement25397969").append("<hr id='done'>");
+                        }
+                    }
                 },
                 error: function () {
-                    // alert("다시 입력하세요.")
                 }
             });
         }
@@ -2885,7 +2904,6 @@
         function MakeDiv(json) {
             for (j = 0; j < json.length; j++) {
                 DivTask(json, j)
-                // alert("for : "+String(j))
             }
         }
 
@@ -2897,7 +2915,7 @@
             try {
                 setTimeout(function () {
                     var item = $("<div class='shopProductWrapper' data-productNo=" + id + ">" +
-                        "<a href='product/event-samplesoap.html'><div class='thumbDiv'>" +
+                        "<a href='/recipes/" + id + "'><div class='thumbDiv'>" +
                         "<div class='thumb img' " +
                         "style='width:100%;background-image:url(" + image + "')>" +
                         "</div><div class='shopProductBackground'></div></div><div class='shopProductNameAndPriceDiv'>" +
@@ -2912,6 +2930,33 @@
                 alert(e)
             }
         }
+
+        $(".headerProductSearchContent").mousedown(function (){
+            console.log('hi')
+            $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
+            $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
+            $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
+        });
+
+        $('html').mousedown(function(e) {
+            if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+            }
+
+            if(!($(e.target).hasClass("headerProductSearchContent") || $(e.target).hasClass("searchPro"))) {
+                $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child')
+                $(".headerProductSearchContent").attr('class', 'headerProductSearchContent')
+                $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child')
+            }
+        });
+
+        $(".searchPro").keydown(function (key) {
+            if (key.keyCode == 13) {
+                let searchText = $(this).val()
+
+                location = "../search/" + searchText
+            }
+        });
     });
 </script>
 
@@ -3123,7 +3168,7 @@
                             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                                  data-type="icon"></div>
                             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)">
+                                <input id="searchPro" class="searchPro">
                             </form>
                         </div>
                         <span class="headerProductSearchContent" data-type="english">SEARCH</span>
@@ -3137,14 +3182,15 @@
                          data-type="icon"></div>
                     <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                          data-type="icon-snowman"></div>
-                </a><a id="headerCart" class="headerCart desktop site-element-child">
-                    <span class="headerCartContent" data-type="english">CART</span>
-                    <span class="headerCartContent" data-type="korean">장바구니</span>
-                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                         data-type="icon"></div>
-                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                         data-type="icon-bag"></div>
                 </a>
+                    <!--                    <a id="headerCart" class="headerCart desktop site-element-child">-->
+                    <!--                    <span class="headerCartContent" data-type="english">CART</span>-->
+                    <!--                    <span class="headerCartContent" data-type="korean">장바구니</span>-->
+                    <!--                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon"></div>-->
+                    <!--                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon-bag"></div>-->
+                    <!--                </a>-->
                 </div>
 
 
@@ -3205,8 +3251,7 @@
             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                  data-type="icon"></div>
             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)"
-                       placeholder="검색">
+                <input >
             </form>
             <div class="closeSearchBar-btn icomoon-ic-close-small systemIcon systemIconWeight_none"></div>
         </div>
@@ -3296,14 +3341,15 @@
                              data-type="icon"></div>
                         <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                              data-type="icon-snowman"></div>
-                    </a><a id="headerCart" class="headerCart desktop site-element-child">
-                        <span class="headerCartContent" data-type="english">CART</span>
-                        <span class="headerCartContent" data-type="korean">장바구니</span>
-                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                             data-type="icon"></div>
-                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                             data-type="icon-bag"></div>
                     </a>
+<!--                        <a id="headerCart" class="headerCart desktop site-element-child">-->
+<!--                        <span class="headerCartContent" data-type="english">CART</span>-->
+<!--                        <span class="headerCartContent" data-type="korean">장바구니</span>-->
+<!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon"></div>-->
+<!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon-bag"></div>-->
+<!--                    </a>-->
                     </div>
 
 
@@ -3430,35 +3476,7 @@
                             </div>
                             <div id='productListWrapper25397969' class='productListWrapper c-3 ratio-4to3'
                                  data-imgWidth='1000'>
-                                <div class='productListPage productListPage-1 now'>
-                                    <!--                                    <div class='shopProductWrapper' data-productNo='2348705'><a-->
-                                    <!--                                            href='product/event-samplesoap.html' alt='고체비누 무료 샘플 신청 12종 중 택 4'>-->
-                                    <!--                                        <div class='thumbDiv'>-->
-                                    <!--                                            <div class='thumb img'-->
-                                    <!--                                                 imgSrc='/uploadedFiles/137352/product/image_1598440681632.png'-->
-                                    <!--                                                 style='width:100%;background-image:url(https://spoonacular.com/recipeImages/1046982-556x370.jpg)'></div>-->
-                                    <!--                                            <div class='shopProductBackground'></div>-->
-                                    <!--                                        </div>-->
-                                    <!--                                        <div class='shopProductNameAndPriceDiv'>-->
-                                    <!--                                            <div class='shopProductNameAndPriceContent'>-->
-                                    <!--                                                <div class='shopProductNameAndPrice'>-->
-                                    <!--                                                    <div class='shopProduct productName'>How to Make the Perfect Sweet Potato Sloppy Joes</div>-->
-                                    <!--                                                    <div class='shopProduct price'>&nbsp;</div>-->
-                                    <!--                                                </div>-->
-                                    <!--                                            </div>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </a>-->
-                                    <!--                                    </div>-->
-                                    <!--                            <div class='paginationDiv productListPagination'>-->
-                                    <!--                                <div class='paginationNo-navi prev hide'></div>-->
-                                    <!--                                <div class='paginationNumbers'>-->
-                                    <!--                                    <div page='1' class='paginationNo-navi paginationNo-navi-1 now'>1</div>-->
-                                    <!--                                    <div page='2' class='paginationNo-navi paginationNo-navi-2'>2</div>-->
-                                    <!--                                    <div page='3' class='paginationNo-navi paginationNo-navi-3'>3</div>-->
-                                    <!--                                </div>-->
-                                    <!--                                <div class='paginationNo-navi next hide'></div>-->
-                                    <!--                            </div>-->
-                                </div>
+                                <div class='productListPage productListPage-1 now'></div>
                             </div>
                 </section>
             </div>

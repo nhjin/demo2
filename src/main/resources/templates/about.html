@@ -2810,6 +2810,37 @@
             height: 25.5px !important;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+
+            $(".headerProductSearchContent").mousedown(function (){
+                console.log('hi')
+                $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
+                $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
+                $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
+            });
+
+            $('html').mousedown(function(e) {
+                if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
+                    $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+                }
+
+                if(!($(e.target).hasClass("headerProductSearchContent") || $(e.target).hasClass("searchPro"))) {
+                    $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child')
+                    $(".headerProductSearchContent").attr('class', 'headerProductSearchContent')
+                    $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child')
+                }
+            });
+
+            $(".searchPro").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    let searchText = $(this).val()
+
+                    location = "./search/" + searchText
+                }
+            });
+        });
+    </script>
 </head>
 <div class="hide">
     <div id="data_div" data-memberNo="165596" data-id="" data-userName=""
@@ -2902,7 +2933,7 @@
             <div class="headerProductSearchContent icomoon-search systemIcon systemIconWeight_none"
                  data-type="icon"></div>
             <form action="#" onsubmit="return false;">
-                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)">
+                <input >
             </form>
         </div>
         <div class="site-division-background-mobile site-division-background-mobile-color"></div>
@@ -3019,7 +3050,7 @@
                             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                                  data-type="icon"></div>
                             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)">
+                                <input id="searchPro" class="searchPro">
                             </form>
                         </div>
                         <span class="headerProductSearchContent" data-type="english">SEARCH</span>
@@ -3033,14 +3064,15 @@
                          data-type="icon"></div>
                     <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                          data-type="icon-snowman"></div>
-                </a><a id="headerCart" class="headerCart desktop site-element-child">
-                    <span class="headerCartContent" data-type="english">CART</span>
-                    <span class="headerCartContent" data-type="korean">장바구니</span>
-                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                         data-type="icon"></div>
-                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                         data-type="icon-bag"></div>
                 </a>
+<!--                    <a id="headerCart" class="headerCart desktop site-element-child">-->
+<!--                    <span class="headerCartContent" data-type="english">CART</span>-->
+<!--                    <span class="headerCartContent" data-type="korean">장바구니</span>-->
+<!--                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+<!--                         data-type="icon"></div>-->
+<!--                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+<!--                         data-type="icon-bag"></div>-->
+<!--                </a>-->
                 </div>
 
 
@@ -3101,8 +3133,7 @@
             <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                  data-type="icon"></div>
             <form class="headerSearchBar" action="#" onsubmit="return false;">
-                <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)"
-                       placeholder="검색">
+                <input >
             </form>
             <div class="closeSearchBar-btn icomoon-ic-close-small systemIcon systemIconWeight_none"></div>
         </div>
@@ -3177,8 +3208,7 @@
                                 <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                                      data-type="icon"></div>
                                 <form class="headerSearchBar" action="#" onsubmit="return false;">
-                                    <input type="search"
-                                           onkeyup="require('v2/mall/util/common').goSearchResultPage(event)">
+                                    <input>
                                 </form>
                             </div>
                             <span class="headerProductSearchContent" data-type="english">SEARCH</span>
@@ -3192,15 +3222,15 @@
                              data-type="icon"></div>
                         <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                              data-type="icon-snowman"></div>
-                    </a><a id="headerCart" class="headerCart desktop site-element-child">
-                        <span class="headerCartContent" data-type="english">CART</span>
-                        <span class="headerCartContent" data-type="korean">장바구니</span>
-                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                             data-type="icon"></div>
-                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                             data-type="icon-bag"></div>
-                    </a>
-                    </div>
+                    </a></div>
+                    <!--                        <a id="headerCart" class="headerCart desktop site-element-child">-->
+                    <!--                        <span class="headerCartContent" data-type="english">CART</span>-->
+                    <!--                        <span class="headerCartContent" data-type="korean">장바구니</span>-->
+                    <!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+                    <!--                             data-type="icon"></div>-->
+                    <!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+                    <!--                             data-type="icon-bag"></div>-->
+                    <!--                    </a>-->
 
 
                     <div id="headerSns" class="headerSns desktop site-element" data-itemType="header-sns">
@@ -3260,8 +3290,7 @@
                 <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                      data-type="icon"></div>
                 <form class="headerSearchBar" action="#" onsubmit="return false;">
-                    <input type="search" onkeyup="require('v2/mall/util/common').goSearchResultPage(event)"
-                           placeholder="검색">
+                    <input>
                 </form>
                 <div class="closeSearchBar-btn icomoon-ic-close-small systemIcon systemIconWeight_none"></div>
             </div>
@@ -3392,14 +3421,14 @@
                              style=''>
                             <div id='itemElement25397978' class='item-element' style=''><p style="text-align: left;"
                                                                                            class="">
-                                "도살장이 있는 한, 전쟁은 사라지지 않을 것이다."<br>
-                                - 톨스토이<br>
+                                "As long as there is a slaughterhouse, the war will not go away."<br>
+                                - Tolstoy<br>
                                 <br>
-                                "만약 우리가 육식을 계속 추구한다면, 행복을 얻기 어렵고 그로 인해 올바른 사회도 이룩할 수 없게 된다."<br>
-                                - 소크라테스<br>
+                                "If we continue to pursue meat eating, it will be difficult to achieve happiness and therefore will not be able to achieve the right society."<br>
+                                - Socrates<br>
                                 <br>
-                                "내가 그랬듯이, 다른 사람들도 동물 살해를 지금의 살인과 똑같이 여길 날이 올 것이다."<br>
-                                - 레오나르도 다빈치<br>
+                                "As I did, there will be a day when other people will think of killing animals the same as killing today."<br>
+                                - Leonardo da Vinci <br>
                                 <br></p></div>
                         </div>
                     </div>
