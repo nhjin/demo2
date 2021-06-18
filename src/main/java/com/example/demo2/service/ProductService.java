@@ -5,10 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import com.example.demo2.entity.Flex;
-import com.example.demo2.entity.FlexDetail;
-import com.example.demo2.entity.Nutrition;
-import com.example.demo2.entity.Product;
+import com.example.demo2.entity.*;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +33,35 @@ public class ProductService {
         Firestore dbFireFire = FirestoreClient.getFirestore();
 
         ApiFuture<WriteResult> collectionApiFuture = dbFireFire.collection(COLLECTION_NAME).document(product.getName()).set(product);
+
+        return collectionApiFuture.get().getUpdateTime().toString();
+
+    }
+
+    public String deleteUser(String uid) throws InterruptedException, ExecutionException {
+        Firestore dbFireFire = FirestoreClient.getFirestore();
+
+        ApiFuture<WriteResult> writeResult = dbFireFire.collection("users").document(uid).delete();
+
+//        System.out.println("Update time : " + writeResult.get().getUpdateTime());
+
+        return writeResult.get().getUpdateTime().toString();
+
+    }
+
+    public String saveUserInfo(User user) throws InterruptedException, ExecutionException {
+        Firestore dbFireFire = FirestoreClient.getFirestore();
+
+        ApiFuture<WriteResult> collectionApiFuture = dbFireFire.collection("users").document(user.getUid()).set(user);
+
+        return collectionApiFuture.get().getUpdateTime().toString();
+
+    }
+
+    public String updateFavorite(String uid, String favorite) throws InterruptedException, ExecutionException {
+        Firestore dbFireFire = FirestoreClient.getFirestore();
+
+        ApiFuture<WriteResult> collectionApiFuture = dbFireFire.collection("users").document(uid).update("favorite", favorite);
 
         return collectionApiFuture.get().getUpdateTime().toString();
 
@@ -183,8 +209,6 @@ public class ProductService {
         CollectionReference reference = dbFirestore.collection("Nutrition");
 
         Query query = reference.whereGreaterThanOrEqualTo("CAR", Lcar).whereLessThanOrEqualTo("CAR", Gcar);
-//        Query PROquery = CARquery.whereGreaterThanOrEqualTo("PRO", Lpro).whereLessThanOrEqualTo("PRO", Gpro);
-//        Query FATquery = PROquery.whereGreaterThanOrEqualTo("CAR", Lfat).whereLessThanOrEqualTo("CAR", Gfat);
 
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 

@@ -144,6 +144,7 @@ var signInWithPopup = function() {
  */
 var handleSignedInUser = function(user) {
     console.log(user.uid)
+    console.log(user.email)
     console.log(user)
     //세션로그인 호출
     sessionLogin(user)
@@ -222,7 +223,7 @@ function sessionLogin(user){
     }).done(function (){
         console.log("success")
 
-        sessionUserInfo(user)
+        // sessionUserInfo(user)
 
     }).fail(function (er){
         console.log(er)

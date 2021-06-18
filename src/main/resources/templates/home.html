@@ -2798,6 +2798,37 @@
 <script>
     $(document).ready(function () {
 
+        let uid = "[[${session.uid}]]"
+        console.log(uid)
+        if(!(uid == "")){
+            let loginBtn = $('.headerCustomerContent')
+
+            loginBtn.each(function (i){
+                if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                    $(this).text("MY PAGE")
+                }
+            });
+        }
+
+        var popupWidth = 300;
+        var popupHeight = 400;
+
+        var popupX = (window.screen.width / 2) - (popupWidth / 2);
+        // 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+
+        var popupY= (window.screen.height / 2) - (popupHeight / 2);
+        // 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+
+        $('.headerCustomerContent').mousedown(function(){
+            // console.log(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1)
+            if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                window.open("../start", "login", "width=300px, height=400px, left=" + popupX + "px, top=" + popupY +"px, resizable=0");
+            }else if(($(this).text()).toUpperCase().indexOf("my page".toUpperCase()) != -1){
+                location = "./mypage"
+            }
+            return false;
+        });
+
         $(".headerProductSearchContent").mousedown(function (){
             console.log('hi')
             $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')

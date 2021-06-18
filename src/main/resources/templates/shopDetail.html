@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.6/webfont.js?v=04081515"></script>
     <script>WebFont.load({google: {families: ['Poppins:500,600,300,400,700']}});</script>
     <script src="https://static.sixshop.com/resources/libs/js/jquery-1.12.4.min.js?v=04081515"></script>
+    <script src="https://static.sixshop.com/resources/libs/js/lozad.min.js?v=04081515"></script>
     <link href="https://static.sixshop.com/resources/build/display-main-built.css?v=04081515"
           rel="stylesheet" type="text/css"/>
     <style>
@@ -2098,6 +2099,8 @@
 
 
 
+
+
         0
         ]
         .galleryThumbnailContent {
@@ -2308,6 +2311,8 @@
 
 
 
+
+
         0
         ]
         .galleryThumbnailContent {
@@ -2315,6 +2320,8 @@
         }
 
         #body #item25397884 .galleryListDiv .galleryWrapper[data-gallerySequence=
+
+
 
 
 
@@ -2328,6 +2335,8 @@
 
 
 
+
+
         2
         ]
         .galleryThumbnailContent {
@@ -2335,6 +2344,8 @@
         }
 
         #body #item25397884 .galleryListDiv .galleryWrapper[data-gallerySequence=
+
+
 
 
 
@@ -2668,6 +2679,8 @@
 
 
 
+
+
         0
         ]
         .galleryThumbnailContent {
@@ -2810,68 +2823,410 @@
             height: 25.5px !important;
         }
     </style>
-    <script>
-        $(document).ready(function () {
-            let uid = "[[${session.uid}]]"
-            console.log(uid)
-            if(!(uid == "")){
-                let loginBtn = $('.headerCustomerContent')
+</head>
+<!--<p><img style="max-height:994px; max-width:33%"
+                            src="https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1598252832652_1000.jpg"/><img
+                             style="max-height:1000px; max-width:33%"
+                             src="https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1598252832802_1000.jpg"
+                             data-loaded="true"/></p>
 
-                loginBtn.each(function (i){
-                    if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
-                        $(this).text("MY PAGE")
+                    <p>&nbsp;</p>
+
+                    <p></p>
+
+                    <p>&nbsp;</p>
+
+<p><span style="font-size:24px"><strong>대나무 칫솔 4set</strong></span></p>
+
+                   <p>&nbsp;</p>
+
+<p>친환경 실크 미세모 대나무 칫솔로 4개가 세트인 상품으로, 화이트/블랙모 구성 중 원하는 조합으로 선택할 수 있습니다. 현재 4+1 이벤트로 4개 세트를 구매하면 1개를 더
+    드립니다!</p>-->
+<script>
+    let foodId = [[${id}]]
+    let favorite
+
+    $(document).ready(function () {
+
+        let uid = "[[${session.uid}]]"
+        console.log(uid)
+        if(!(uid == "")){
+
+            $.ajax({
+                url: "/next/get/" + uid,
+                type: "get",
+                dataType: 'json'
+            }).done(function (json) {
+                favorite = json.favorite
+                if(favorite.includes(foodId)){
+                    $("#btn_addToCart").html("Delete to Favorite")
+               }
+            }).fail(function (er) {
+
+            })
+
+            let loginBtn = $('.headerCustomerContent')
+
+            loginBtn.each(function (i){
+                if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                    $(this).text("MY PAGE")
+                }
+            });
+        }
+
+        var popupWidth = 300;
+        var popupHeight = 400;
+
+        var popupX = (window.screen.width / 2) - (popupWidth / 2);
+        // 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+
+        var popupY= (window.screen.height / 2) - (popupHeight / 2);
+        // 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+
+        $('.headerCustomerContent').mousedown(function(){
+            // console.log(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1)
+            if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                window.open("../start", "login", "width=300px, height=400px, left=" + popupX + "px, top=" + popupY +"px, resizable=0");
+            }else if(($(this).text()).toUpperCase().indexOf("my page".toUpperCase()) != -1){
+                location = "../mypage"
+            }
+            return false;
+        });
+
+        let date = new Date();
+
+        let fyear = date.getFullYear().toString();
+        // console.log(fyear)
+        fyear = fyear.charAt(fyear.length-2) + fyear.charAt(fyear.length-1)
+
+        let fmonth = Number(date.getMonth()) + 1;
+        // console.log(fmonth)
+        fmonth = fmonth >= 10 ? fmonth : '0' + fmonth
+
+        let fdate = date.getDate();
+        // console.log(fdate)
+        fdate = fdate >= 10 ? fdate : '0' + fdate
+
+        date = fyear + "." + fmonth + "." + fdate
+        // console.log(date);
+
+        $("#btn_addToCart").mousedown(function (){
+            if(($("#btn_addToCart").html()).includes("Add")){
+
+                favorite += "@" + foodId + "#" + date
+
+                $.ajax({
+                    url: "../api/updateFavorite",
+                    type: 'post',
+                    data: favorite,
+                    success: function () {
+                        $("#btn_addToCart").html("Delete to Favorite")
+                    },
+                    error: function (e) {
+                        alert(e)
+                    }
+                });
+            }else{
+                let deleteItem = "@"
+                let favoriteSplit = favorite.split("@");
+                for(let cnt = 1; cnt < favoriteSplit.length; cnt++){
+                    if(favoriteSplit[cnt].includes(foodId)){
+                        deleteItem += favoriteSplit[cnt]
+                    }
+                }
+                favorite = favorite.replace(deleteItem, "")
+
+                $.ajax({
+                    url: "../api/updateFavorite",
+                    type: 'post',
+                    data: favorite,
+                    success: function () {
+                        $("#btn_addToCart").html("Add to Favorite")
+                    },
+                    error: function (e) {
+                        alert(e)
                     }
                 });
             }
+        })
 
-            var popupWidth = 300;
-            var popupHeight = 400;
+        var Show = 0;
+        var loca = "";
 
-            var popupX = (window.screen.width / 2) - (popupWidth / 2);
-            // 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+        $.ajax({
+            url: "/api/products/" + foodId,
+            type: 'get',
+            dataType: "json",
+            success: function (json) {
+                // MakeDiv(json)
+                // SearchProduct(json[2].id)
+                // console.log(json.steps[0].equipment)
+                // console.log(json.ingredients[0].Name
+                var summaryTxt = json.summary
+                var re = /<b>/gi
+                var resummaryTxt = summaryTxt.replace(re, '').replace(/<\/b>/gi, '').replace(".", ".\n")
+                var splitsummary = resummaryTxt.split('Similar recipes are')
+                $("#shopProductCaption").append(splitsummary[0] + "<br><br><hr><br>Ingredients<br>")
+                selecList(json)
+                $("#bigImage").attr("style", "background-image:url(" + json.image + ");width:100%")
+                $("#smallImage").attr("style", "background-image:url(" + json.image + ");width:100%")
+                $("#shopProductName").text(json.title)
+                $("#productDescriptionDetailPage").append("<hr><p>&nbsp;</p>")
+                for(let i = 0; i < json.steps.length; i++) {
+                    $("#productDescriptionDetailPage").append("<p><span style=\"font-size:24px\"><strong>Step " + json.steps[i].number + ". </strong></span></p>")
+                    if(!(json.steps[i].number == 0)){
+                        if(json.steps[i].equipment.length != 0){
+                            let Equtable = "<table>";
+                            let imageTr = "<tr>";
+                            let nameTr = "<tr>";
 
-            var popupY= (window.screen.height / 2) - (popupHeight / 2);
-            // 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+                            for(let j = 0; j < json.steps[i].equipment.length; j++) {
+                                console.log(json.steps[i].equipment[j].image)
+                                imageTr += '<td width="133px" align="center"><img style="max-width:50%" src="' + json.steps[i].equipment[j].image + '" onerror="this.src=\'https://firebasestorage.googleapis.com/v0/b/vegan-again-48a23.appspot.com/o/pngwing.com.png?alt=media&token=23f0ad2a-acb7-4616-9116-04003a1c875c\';"/></td>'
+                                nameTr += '<td width="133px" align="center">'+ json.steps[i].equipment[j].name + '</td>'
+                            }
+                            imageTr += "</tr>"
+                            nameTr += "</tr>"
+                            Equtable += imageTr + nameTr + "</table><p>&nbsp;</p>"
 
-            $('.headerCustomerContent').mousedown(function(){
-                // console.log(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1)
-                if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
-                    window.open("../start", "login", "width=300px, height=400px, left=" + popupX + "px, top=" + popupY +"px, resizable=0");
-                }else if(($(this).text()).toUpperCase().indexOf("my page".toUpperCase()) != -1){
-                    location = "./mypage"
+                            $("#productDescriptionDetailPage").append("<p>&nbsp;</p><p>Equipments</p><p>&nbsp;</p>")
+                            $("#productDescriptionDetailPage").append(Equtable)
+                        }
+
+                        if(json.steps[i].ingredients.length != 0){
+                            let Ingretable = "<table>";
+                            let imageTr = "<tr>";
+                            let nameTr = "<tr>";
+
+                            for(let j = 0; j < json.steps[i].ingredients.length; j++) {
+                                imageTr += '<td width="133px" align="center"><img style="max-width:50%" src="' + json.steps[i].ingredients[j].image + '" onerror="this.src=\'https://firebasestorage.googleapis.com/v0/b/vegan-again-48a23.appspot.com/o/pngwing.com.png?alt=media&token=23f0ad2a-acb7-4616-9116-04003a1c875c\';"/></td>'
+                                nameTr += '<td width="133px" align="center">'+ json.steps[i].ingredients[j].name + '</td>'
+                            }
+                            imageTr += "</tr>"
+                            nameTr += "</tr>"
+                            Ingretable += imageTr + nameTr + "</table><p>&nbsp;</p>"
+
+                            $("#productDescriptionDetailPage").append("<p>&nbsp;</p><p>Ingredients</p><p>&nbsp;</p>")
+                            $("#productDescriptionDetailPage").append(Ingretable)
+                        }
+                        $("#productDescriptionDetailPage").append("<p>&nbsp;</p><p>" + json.steps[i].step + "</p>")
+                        $("#productDescriptionDetailPage").append("<p>&nbsp;</p><p>&nbsp;</p><hr><p>&nbsp;</p><p>&nbsp;</p>")
+                    }else{
+                        $("#productDescriptionDetailPage").append("<p>&nbsp;</p><a>" + json.steps[i].step + "</a>")
+                        $("#productDescriptionDetailPage").append("<p>&nbsp;</p><p>&nbsp;</p><hr><p>&nbsp;</p><p>&nbsp;</p>")
+                    }
                 }
-                return false;
-            });
 
-            $(".headerProductSearchContent").mousedown(function (){
-                console.log('hi')
-                $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
-                $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
-                $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
-            });
-
-            $('html').mousedown(function(e) {
-                if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
-                    $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
-                }
-
-                if(!($(e.target).hasClass("headerProductSearchContent") || $(e.target).hasClass("searchPro"))) {
-                    $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child')
-                    $(".headerProductSearchContent").attr('class', 'headerProductSearchContent')
-                    $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child')
-                }
-            });
-
-            $(".searchPro").keydown(function (key) {
-                if (key.keyCode == 13) {
-                    let searchText = $(this).val()
-
-                    location = "./search/" + searchText
-                }
-            });
+                $("#displayCanvas").attr("style", "display: show")
+                // alert(resummaryTxt)
+            },
+            error: function () {
+                alert("다시 입력하세요.")
+            }
         });
-    </script>
-</head>
+        var cateList = []
+        cateList.push("flexitarian")
+        cateList.push("Pescetarian")
+        cateList.push("Vegetarian")
+        cateList.push("vegan")
+
+        for(let i = 0; i < cateList.length; i++){
+            $.ajax({
+                url: "/api/products/"+ cateList[i] + "/" + foodId,
+                type: 'get',
+                dataType: "json",
+                success: function (json) {
+                    // alert(json.title + " : " + cateList[i])
+                    if (cateList[i] == "flexitarian"){
+                        $("#category").text("Flexitarian")
+                    }else if(cateList[i] == "vegan"){
+                        $("#category").text("Vegan")
+                    }else{
+                        $("#category").text(cateList[i])
+                    }
+                },
+                error: function () {}
+            });
+        }
+
+        $('.customSelectDiv').mousedown(function(){
+            // alert("해위")
+            if ($("#selectBox").attr("class") == "selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-show"){
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+            }else {
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-show')
+            }
+        });
+
+        $('html').mousedown(function(e) {
+            if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+            }
+        });
+
+        function miniCart(itemName) {
+
+            $("#minicartWrapper").attr('class',"miniCart-wrapper row designSettingElement text-body");
+            var div ="";
+
+            if(Show != 0) {
+                div= $('<div id="'+Show+'" class="miniCart-product-list row"></div>');
+                $('#'+(Show-1)).after(div);
+            }else{
+                div= $('<div id="0" class="miniCart-product-list row"></div>');
+                $('#minicartInner').append(div);
+            }
+
+            div= $('<div id="'+Show+'-1" class="miniCart-product-text"></div>');
+            $('#'+Show+'').append(div);
+
+            div= $('<span id="'+Show+'-1-1" class="product-name">'+ itemName +'</span>');
+            $('#'+Show+'-1').append(div);
+
+            div= $('<i id="minicartClose" class="btn-delete designSettingElement text-assi icomoon-ic-close-small"></i>');
+            $('#'+Show+'-1-1').after(div);
+
+            div= $('<div id="'+Show+'-2" class="product-qty-wrapper"><div>');
+            $('#'+Show+'-1').after(div);
+
+            div= $('<span id="'+Show+'-2-1" class="ui-spinner ui-corner-all ui-widget ui-widget-content"></span>');
+            $('#'+Show+'-2').append(div);
+
+            div= $('<input id="'+Show+'-2-1-1" class="product-qty designSettingElement shape ui-spinner-input" data-combined-option-no="1108822+3575137" data-cart-item-name="41(260mm~265mm)" type="number" value="1" min="1" aria-valuemin="1" aria-valuenow="1" autocomplete="off" role="spinbutton"></input>');
+            $('#'+Show+'-2-1').append(div);
+
+            div= $('<a id="'+Show+'-2-1-2" tabindex="-1" aria-hidden="true" class="ui-button ui-widget ui-spinner-button ui-spinner-up ui-corner-tr ui-button-icon-only" role="button"></a>');
+            $('#'+Show+'-2-1-1').after(div);
+
+            div= $('<span id="'+Show+'-2-1-2-1" class="ui-button-icon ui-icon ui-icon-triangle-1-n"></span>');
+            $('#'+Show+'-2-1-2').append(div);
+
+            div= $('<span class="ui-button-icon-space"> </span>');
+            $('#'+Show+'-2-1-2-1').after(div);
+
+            div= $('<a id="'+Show+'-2-1-3" tabindex="-1" aria-hidden="true" class="ui-button ui-widget ui-spinner-button ui-spinner-down ui-corner-br ui-button-icon-only" role="button"></a>');
+            $('#'+Show+'-2-1-2').after(div);
+
+            div= $('<span id="'+Show+'-2-1-3-1" class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span>');
+            $('#'+Show+'-2-1-3').append(div);
+
+            div= $('<span class="ui-button-icon-space"> </span>');
+            $('#'+Show+'-2-1-3-1').after(div);
+
+            div= $('<span class="product-price"></span>');
+            $('#'+Show+'-2-1').after(div);
+
+            Show++;
+
+            /*minicartClose*/
+            $('.btn-delete').mousedown(function(){
+                loca = ($(this))
+                deleteItem();
+            });
+
+            /* +, - */
+            $('.ui-button').off().mousedown(function(){
+                loca = ($(this))
+
+                check = loca.attr('id');
+                var checkList = check.split("-");
+
+                qtyId = loca.siblings('.product-qty').attr('id'); //형제요소
+                qtyVal = $('#'+qtyId).val();
+                /* alert($(this).attr('id')); */
+                if(checkList[3] == "3"){
+                    /* - */
+                    qtyVal--;
+                    $('#'+qtyId).val(qtyVal);
+                    if(qtyVal<=0){
+                        deleteItem();
+                    }
+                }else if(checkList[3] == "2"){
+                    /* + */
+                    qtyVal++;
+                    $('#'+qtyId).val(qtyVal);
+                }
+            });
+        }
+
+        function selecList(json) {
+            for(let i = 0; i < json.ingredients.length; i++){
+                // console.log(json.ingredients[i].Name)
+                $("#shopProductCaption").append("<br>" + (i+1) + ". " + json.ingredients[i].Name)
+                $(".custom-select-box-list-inner").append("<div class='custom-select-option' data-option-index='0'><div class='custom-select-option-info'>" + json.ingredients[i].Name + "</div></div>")
+            }
+
+            $('.custom-select-option-info').mousedown(function (){
+                if($('.shopProductCartErrorDiv')){
+                    $('.shopProductCartErrorDiv').remove();
+                }
+                // alert($(this).text())
+                var itemName = $(this).text();
+                if($('.product-name').text().indexOf(itemName) != -1){	//문자열이 포함 되어있는지 확인
+                    if($('.shopProductCartErrorDiv')){
+                        $('.shopProductCartErrorDiv').remove();
+                    }
+                    div= $('<div id="shopProductCartErrorDiv" class="shopProductCartErrorDiv row designSettingElement text-body">Already selected.</div>');
+                    $("#minicartWrapper").after(div);
+                }else {
+                    miniCart(itemName);
+                }
+            });
+        }
+
+        function deleteItem(){
+            // $('.shopProductCartErrorDiv').remove();
+            // $('#minicartTitle').text("선택하세요.");
+            /* console.log(close); */
+            close = loca.parents('.miniCart-product-list');
+            $(close).remove();
+            // resultSum();
+
+            /* if($.contains(document.body, document.getElementById("0"))){ */
+            if($("#minicartInner").children().last().length){
+
+            }else {
+                Show=0;
+                $('.shopProductCartErrorDiv').remove();
+                $("#minicartWrapper").attr('class',"miniCart-wrapper row designSettingElement text-body hide");
+            }
+        }
+
+        $("#btn_buyNow").mousedown(function (){
+            for(let i = 0; i < $("#minicartInner").children().length; i++){
+                alert($("#"+i).text())
+            }
+            // alert($("#minicartInner").children().length)
+        });
+
+        $(".headerProductSearchContent").mousedown(function (){
+            console.log('hi')
+            $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
+            $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
+            $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
+        });
+
+        $('html').mousedown(function(e) {
+            if(!($(e.target).hasClass("customSelectDiv") || $(e.target).hasClass("customSelectDivLabel"))) {
+                $("#selectBox").attr("class", 'selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide')
+            }
+
+            if(!($(e.target).hasClass("headerProductSearchContent") || $(e.target).hasClass("searchPro"))) {
+                $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child')
+                $(".headerProductSearchContent").attr('class', 'headerProductSearchContent')
+                $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child')
+            }
+        });
+
+        $(".searchPro").keydown(function (key) {
+            if (key.keyCode == 13) {
+                let searchText = $(this).val()
+
+                location = "../search/" + searchText
+            }
+        });
+    });
+</script>
 <div class="hide">
     <div id="data_div" data-memberNo="165596" data-id="" data-userName=""
          data-sitePlan="trial" data-ownerId=""
@@ -2944,7 +3299,7 @@
         <div class="mobileSideMenu">
             <div class="headerLogoInMobileMenuWrapper">
                 <a id="headerLogoInMobileMenu" class="bottom"
-                   href="./home"
+                   href="../home"
                 >
                     <h1 class="site-name">Vegan Again</h1>
 
@@ -2963,7 +3318,7 @@
             <div class="headerProductSearchContent icomoon-search systemIcon systemIconWeight_none"
                  data-type="icon"></div>
             <form action="#" onsubmit="return false;">
-                <input >
+                <input type="search">
             </form>
         </div>
         <div class="site-division-background-mobile site-division-background-mobile-color"></div>
@@ -2972,21 +3327,21 @@
         <ul class="headerMenuListContents mobile">
 
             <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="ABOUT"
-                                                                              href="./about">ABOUT</a>
+                                                                              href="../about">ABOUT</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
                 </div>
             </li>
             <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="SHOP"
-                                                                              href="./recipes">RECIPES</a>
+                                                                              href="../recipes">RECIPES</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
                 </div>
             </li>
             <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="BLOG"
-                                                                              href="./recommend">RECOMMEND</a>
+                                                                              href="../recommend">RECOMMEND</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
@@ -3024,7 +3379,7 @@
             <div class="column header-left">
 
 
-                <a href="./home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
+                <a href="../home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
 
 
                     <h1 class="site-name">Vegan Again</h1>
@@ -3043,21 +3398,21 @@
                     <ul class="headerMenuListContents desktop">
 
                         <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="ABOUT"
-                                                                                          href="./about">ABOUT</a>
+                                                                                          href="../about">ABOUT</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
                             </div>
                         </li>
                         <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="SHOP"
-                                                                                          href="./recipes">RECIPES</a>
+                                                                                          href="../recipes">RECIPES</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
                             </div>
                         </li>
                         <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="BLOG"
-                                                                                          href="./recommend">RECOMMEND</a>
+                                                                                          href="../recommend">RECOMMEND</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
@@ -3095,14 +3450,14 @@
                     <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                          data-type="icon-snowman"></div>
                 </a>
-<!--                    <a id="headerCart" class="headerCart desktop site-element-child">-->
-<!--                    <span class="headerCartContent" data-type="english">CART</span>-->
-<!--                    <span class="headerCartContent" data-type="korean">장바구니</span>-->
-<!--                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
-<!--                         data-type="icon"></div>-->
-<!--                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
-<!--                         data-type="icon-bag"></div>-->
-<!--                </a>-->
+                    <!--                    <a id="headerCart" class="headerCart desktop site-element-child">-->
+                    <!--                    <span class="headerCartContent" data-type="english">CART</span>-->
+                    <!--                    <span class="headerCartContent" data-type="korean">장바구니</span>-->
+                    <!--                    <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon"></div>-->
+                    <!--                    <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+                    <!--                         data-type="icon-bag"></div>-->
+                    <!--                </a>-->
                 </div>
 
 
@@ -3179,7 +3534,7 @@
                 <div class="column header-left">
 
 
-                    <a href="./home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
+                    <a href="../home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
 
 
                         <h1 class="site-name">Vegan Again</h1>
@@ -3199,7 +3554,7 @@
 
                             <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="ABOUT"
-                                                                                              href="./about">ABOUT</a>
+                                                                                              href="../about">ABOUT</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3207,7 +3562,7 @@
                             </li>
                             <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="SHOP"
-                                                                                              href="./recipes">RECIPES</a>
+                                                                                              href="../recipes">RECIPES</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3215,7 +3570,7 @@
                             </li>
                             <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="BLOG"
-                                                                                              href="./recommend">RECOMMEND</a>
+                                                                                              href="../recommend">RECOMMEND</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3238,7 +3593,7 @@
                                 <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                                      data-type="icon"></div>
                                 <form class="headerSearchBar" action="#" onsubmit="return false;">
-                                    <input>
+                                    <input type="search">
                                 </form>
                             </div>
                             <span class="headerProductSearchContent" data-type="english">SEARCH</span>
@@ -3252,15 +3607,16 @@
                              data-type="icon"></div>
                         <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                              data-type="icon-snowman"></div>
-                    </a></div>
-                    <!--                        <a id="headerCart" class="headerCart desktop site-element-child">-->
-                    <!--                        <span class="headerCartContent" data-type="english">CART</span>-->
-                    <!--                        <span class="headerCartContent" data-type="korean">장바구니</span>-->
-                    <!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
-                    <!--                             data-type="icon"></div>-->
-                    <!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
-                    <!--                             data-type="icon-bag"></div>-->
-                    <!--                    </a>-->
+                    </a>
+<!--                        <a id="headerCart" class="headerCart desktop site-element-child">-->
+<!--                        <span class="headerCartContent" data-type="english">CART</span>-->
+<!--                        <span class="headerCartContent" data-type="korean">장바구니</span>-->
+<!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon"></div>-->
+<!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon-bag"></div>-->
+<!--                    </a>-->
+                    </div>
 
 
                     <div id="headerSns" class="headerSns desktop site-element" data-itemType="header-sns">
@@ -3274,7 +3630,7 @@
                 <div class="column header-left">
 
 
-                    <a href="./home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
+                    <a href="../home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
 
 
                         <h1 class="site-name">Vegan Again</h1>
@@ -3301,12 +3657,13 @@
                              data-type="icon"></div>
                         <div class="headerCustomerContent icomoon-snowman systemIcon systemIconWeight_none"
                              data-type="icon-snowman"></div>
-                    </a><a id="headerCart" class="headerCart mobile site-element-child">
-                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"
-                             data-type="icon"></div>
-                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"
-                             data-type="icon-bag"></div>
                     </a>
+<!--                        <a id="headerCart" class="headerCart mobile site-element-child">-->
+<!--                        <div class="headerCartContent icomoon-cart systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon"></div>-->
+<!--                        <div class="headerCartContent icomoon-bag systemIcon systemIconWeight_none"-->
+<!--                             data-type="icon-bag"></div>-->
+<!--                    </a>-->
                     </div>
 
 
@@ -3320,7 +3677,7 @@
                 <div class="searchIcon icomoon-search systemIcon systemIconWeight_none"
                      data-type="icon"></div>
                 <form class="headerSearchBar" action="#" onsubmit="return false;">
-                    <input>
+                    <input type="search" placeholder="검색">
                 </form>
                 <div class="closeSearchBar-btn icomoon-ic-close-small systemIcon systemIconWeight_none"></div>
             </div>
@@ -3330,158 +3687,329 @@
     </div>
 
 
-    <div id="displayCanvas" class="desktop" data-viewport="desktop">
+    <div id="displayCanvas" class="desktop" data-viewport="desktop" style="display: none">
 
 
-        <div id='page1483815' cid='page1483815' class='page pagepage page-opened'>
-            <div id='sectionWrapper8635851' class='section-wrapper sectionWrapper8635851 null null' data-orderNo='1'
-                 cid='section8635851'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635851' class='section' data-orderNo='1'></section>
-            </div>
-            <div id='sectionWrapper8635852'
-                 class='section-wrapper sectionWrapper8635852 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='2' cid='section8635852'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635852' class='section' data-orderNo='2'>
-                    <div data-columnNo='1' id='section8635852_column1' class='customSectionColumn column-1'>
-                        <div id='item25397971' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635852'
-                             data-itemNo='25397971' cid='item25397971' style=''>
-                            <div id='itemElement25397971' class='item-element' style='height:32px;'></div>
+        <div class="shopProductDetail wrapper">
+            <div id="productDetail" class="productDetail wrapper">
+                <div class="top-info clearfix">
+                    <div id="shopProductImgsDiv"
+                         class="content mainImg productImgType_thumbnails ratio_1to1 loading"
+                         imgSrc="https://www.sixshop.com/uploadedFiles/137352/product/image_1598251564779.jpg">
+                        <div id='shopProductImgsMainDiv' class='main img-div img imgZoom'>
+                            <div class='shopProductImgMainWrapper type_thumbnails sequence_0 on'>
+<!--                            <div data-shopProductSequence='0'-->
+<!--                                 imgSrc='/uploadedFiles/137352/product/image_1598251564779.jpg'-->
+<!--                                 class='shopProductImgMainZoom type_thumbnails shopProductImgRatio'-->
+<!--                                 style='background-image:url(https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1598251564779_2500.jpg);width:100%'></div>-->
+                            <div data-shopProductSequence='0'
+                                 imgSrc='/uploadedFiles/137352/product/image_1598251564779.jpg'
+                                 class='shopProductImgMain type_thumbnails shopProductImgRatio'
+                                 id="bigImage"
+                                 style='background-image:url();width:100%'></div>
                         </div>
+                        <div class='shopProductImgMainWrapper type_thumbnails sequence_1'>
+                        <div data-shopProductSequence='1' imgSrc='/uploadedFiles/137352/product/image_1597908449380.jpg'
+                             class='shopProductImgMainZoom type_thumbnails shopProductImgRatio'
+                             style='background-image:url(https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1597908449380_2500.jpg);width:100%'></div>
+                        <div data-shopProductSequence='1' imgSrc='/uploadedFiles/137352/product/image_1597908449380.jpg'
+                             class='shopProductImgMain type_thumbnails shopProductImgRatio'
+                             style='background-image:url(https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1597908449380_1000.jpg);width:100%'></div>
                     </div>
-                </section>
+                </div>
+                <div id='shopProductImgsThumbDiv' class='sub img-div'>
+                    <div class='sub img' data-shopProductSequence='0'>
+                        <div class='shopProductImgRatio' id="smallImage" imgSrc='/uploadedFiles/137352/product/image_1598251564779.jpg'
+                             style='background-image:url();width:100%'></div>
+                    </div>
+<!--                    <div class='sub img' data-shopProductSequence='1'>-->
+<!--                        <div class='shopProductImgRatio' imgSrc='/uploadedFiles/137352/product/image_1597908449380.jpg'-->
+<!--                             style='background-image:url(https://contents.sixshop.com/thumbnails/uploadedFiles/137352/product/image_1597908449380_1000.jpg);width:100%'></div>-->
+<!--                    </div>-->
+                </div>
             </div>
-            <div id='sectionWrapper8635853'
-                 class='section-wrapper sectionWrapper8635853 element-section gallery-section' data-orderNo='3'
-                 cid='section8635853'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635853' class='section widthWide' data-orderNo='3'>
-                    <div id='item25397972'
-                         class='item-wrapper gallery galleryGrid slide-hidden-contents-notUse centerMiddle c-1 c-1-mobile'
-                         data-type='item' data-itemType='gallery' data-orderNo='1' data-sectionNo='8635853'
-                         data-itemNo='25397972' cid='item25397972'>
-                        <div id='itemElement25397972' class='item-element'>
-                            <div class='galleryListDiv hover_noEffect noEffect ratio-7to3 borderMargin'>
-                                <div class='galleryWrapper image' data-gallerySequence='0'>
-                                    <div class='galleryThumbnail'>
-                                        <div class='galleryThumbnailContent'
-                                             style='background-image: url("https://contents.sixshop.com/thumbnails/uploadedFiles/18536/default/image_1480900035082_1500.jpg");'></div>
-                                        <div class='galleryBackground'></div>
-                                    </div>
-                                    <div class='galleryCaption'></div>
+
+
+            <div id="shopProductContentInfo" class="content clearfix info align_left">
+                <div id="shopProductNameWrapper" class="row">
+                    <h1 id="shopProductName" class="row name designSettingElement productName">대나무 칫솔 4set</h1>
+                    <div id="shopProductReviewElem" class="designSettingElement text-body hide"
+                         data-product-rating-value=0.0>
+
+                    </div>
+                </div>
+
+
+                <div id="shopProductPrice" class="price row designSettingElement">
+
+
+                    <span id="category" class="productPriceSpan">10,000원</span>
+
+
+                </div>
+
+
+                <div id="shopProductCaptionDiv" class="row caption designSettingElement text-body">
+    <span id="shopProductCaption" class="text"></span>
+                </div>
+
+
+                <div id="productAdditionalInfo" class="row productInfo designSettingElement text-body">
+
+
+<!--                    <div id="shopSettingShipmentDiv" class="shipping">-->
+<!--                        <span class="title">-->
+<!--                            배송비-->
+<!--                        </span>-->
+<!--                        <span class="shopSettingShipmentInfo description js-deliveryPriceText">-->
+<!--                            - -->
+<!--                        </span>-->
+<!--                    </div>-->
+                    <div class="js-extraFeeDescription hide" style="margin-top: 0;">
+                        <span class="title"></span>
+                        <span class="shopSettingShipmentInfo description">
+
+                        </span>
+                    </div>
+                    <div id="shopProductDetailSameShippingPolicyProductSearchLink" class="hide">
+                        <span class="title"></span>
+                        <a class="description designSettingElement text-link">함께 구매 시 배송비 절약 상품 보기</a>
+                    </div>
+
+
+                    <div id="shopProductAdditionalFixedOptionPriceDiv"
+                         class="shopProductAdditionalFixedOptionPriceDiv hide">
+                        <span class="title">추가 금액</span>
+                        <span class="shopProductAdditionalFixedOptionPriceInfo description"></span>
+                    </div>
+                </div>
+                <div class='shopProductOptionListDiv row selectOptions designSettingElement text-body'
+                     data-not-selling='false'>
+                    <div class='custom-select-final-option'></div>
+                    <div class='productOption custom-select-wrapper'><span class='custom-select-option-name'>Shop Ingredients</span>
+                        <div class='customSelectDiv designSettingElement shape custom-select-box' tabindex='0'>
+                            <span class='customSelectDivLabel custom-select-box-label custom-select-selected-option-value'
+                                  data-option-index='0' data-default-text='선택하세요.'>select</span>
+                            <div id="selectBox" class='selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide'
+                                 data-option-index='0' data-option-arrangement='dropDown'>
+                                <div class='custom-select-box-list-overlay'></div>
+                                <div class='custom-select-box-list-inner'>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+
+
+                <div id="minicartWrapper" class="miniCart-wrapper row designSettingElement text-body hide">
+                    <div id="minicartInner" class="miniCart-product-info designSettingElement shape">
+                    </div>
+
+                    <div class="miniCart-total-price-wrapper designSettingElement text-body">
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+
+                <div id="shopProductCartErrorDiv"
+                     class="shopProductCartErrorDiv row designSettingElement text-body hide">
+
+
+                    <span class="text">품절된 상품입니다.</span>
+
+
+                </div>
+                <div id="productActionButtonDiv" class="productActionButtonDiv row">
+
+
+                    <div class="normalButton">
+                        <div class="btn-wrapper buyButton">
+                            <button id="btn_buyNow" class="buyNow designSettingElement button "
+                                    data-is-mini-cart-available="true">
+                                Buy
+                            </button>
+                        </div>
+                        <div class="btn-wrapper cartButton">
+                            <button id="btn_addToCart"
+                                    class="addToCart designSettingElement button outline "
+                                    data-is-mini-cart-available="true">
+                                Add to favorites
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
             </div>
-            <div id='sectionWrapper8635854'
-                 class='section-wrapper sectionWrapper8635854 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='4' cid='section8635854'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635854' class='section' data-orderNo='4'>
-                    <div data-columnNo='1' id='section8635854_column1' class='customSectionColumn column-1'>
-                        <div id='item25397973' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635854'
-                             data-itemNo='25397973' cid='item25397973' style=''>
-                            <div id='itemElement25397973' class='item-element' style='height:32px;'></div>
-                        </div>
-                        <div id='item25397974' class='item-wrapper text-title' data-type='item'
-                             data-itemType='text-title' data-orderNo='2' data-sectionNo='8635854' data-itemNo='25397974'
-                             cid='item25397974' style=''>
-                            <div id='itemElement25397974' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">Healthy living and eating habits brand,
-                                <span text-style-option="fontStyleBold" style="font-weight: bold;">Vegan Again</span></p></div>
-                        </div>
-                        <div id='item25397975' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='3' data-sectionNo='8635854'
-                             data-itemNo='25397975' cid='item25397975' style=''>
-                            <div id='itemElement25397975' class='item-element' style='height:0px;'></div>
-                        </div>
+
+        </div>
+
+        <div id="productDetailNavigation">
+            <div class="productDetailNaviClone"></div>
+            <div class="productDetailNaviWrap designSettingElement entire-background-color hide">
+                <div class="productDetailNaviContent c-6">
+                    <div class="menu-navi designSettingElement text-body productDescriptionHeaderNavi">
+                        <a href="#productCommonHeader" class="menu-name">상세 설명 머리글</a>
                     </div>
-                </section>
-            </div>
-            <div id='sectionWrapper8635855'
-                 class='section-wrapper sectionWrapper8635855 custom-section custom-section sectionColumn-2 custom-reverse-left-and-right-notUse'
-                 data-orderNo='5' cid='section8635855'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635855' class='section' data-orderNo='5'>
-                    <div data-columnNo='1' id='section8635855_column1' class='customSectionColumn column-1'>
-                        <div id='item25397976' class='item-wrapper text-body' data-type='item' data-itemType='text-body'
-                             data-orderNo='1' data-sectionNo='8635855' data-itemNo='25397976' cid='item25397976'
-                             style=''>
-                            <div id='itemElement25397976' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">
-                                "There is nothing like evolution into a vegetarian diet that helps human health and increases the chances of surviving on Earth."<br>
-                                - Albert Einstein <br>
-                                <br>
-                                "If the slaughterhouse walls were made of glass, everyone would be vegetarian."<br>
-                                - Paul McCartney <br>
-                                <br>
-                                "Vegetable eating has a huge impact on not only health and physical vitality but also on mind and behavior."<br>
-                                - Thomas Edison<br>
-                            </p></div>
-                        </div>
-                        <div id='item25397977' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='2' data-sectionNo='8635855'
-                             data-itemNo='25397977' cid='item25397977' style=''>
-                            <div id='itemElement25397977' class='item-element' style='height:0px;'></div>
-                        </div>
+                    <div class="menu-navi designSettingElement text-body productDescriptionDetailPageNavi">
+                        <a href="#productDescriptionDetailPage" class="menu-name">상세 설명</a>
                     </div>
-                    <div data-columnNo='2' id='section8635855_column2' class='customSectionColumn column-2'>
-                        <div id='item25397978' class='item-wrapper text-body' data-type='item' data-itemType='text-body'
-                             data-orderNo='3' data-sectionNo='8635855' data-itemNo='25397978' cid='item25397978'
-                             style=''>
-                            <div id='itemElement25397978' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">
-                                "As long as there is a slaughterhouse, the war will not go away."<br>
-                                - Tolstoy<br>
-                                <br>
-                                "If we continue to pursue meat eating, it will be difficult to achieve happiness and therefore will not be able to achieve the right society."<br>
-                                - Socrates<br>
-                                <br>
-                                "As I did, there will be a day when other people will think of killing animals the same as killing today."<br>
-                                - Leonardo da Vinci <br>
-                                <br></p></div>
-                        </div>
+                    <div class="menu-navi designSettingElement text-body productCommonFooterNavi">
+                        <a href="#productCommonFooter" class="menu-name">상세 설명 바닥글</a>
                     </div>
-                </section>
-            </div>
-            <div id='sectionWrapper8635856'
-                 class='section-wrapper sectionWrapper8635856 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='6' cid='section8635856'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635856' class='section' data-orderNo='6'>
-                    <div data-columnNo='1' id='section8635856_column1' class='customSectionColumn column-1'>
-                        <div id='item25397979' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635856'
-                             data-itemNo='25397979' cid='item25397979' style=''>
-                            <div id='itemElement25397979' class='item-element' style='height:68px;'></div>
-                        </div>
+                    <div class="menu-navi designSettingElement text-body reviewBoardPostNavi">
+                        <a href="#reviewBoardPost" class="menu-name"
+                           data-track-conversion-type="click"
+                           data-track-conversion-title="shop-product-review-navi-click">후기(0)</a>
                     </div>
-                </section>
+                    <div class="menu-navi designSettingElement text-body qnaBoardPostNavi">
+                        <a href="#qnaBoardPost" class="menu-name">질문(10)</a>
+                    </div>
+                    <div class="menu-navi designSettingElement text-body relatedProductListWrapNavi">
+                        <a href="#relatedProductListWrap" class="menu-name">관련 상품</a>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div class="bottom-info designSettingElement shape">
+
+            <div class="productDetailSection">
+                <div id="productDescriptionDetailPage"
+                     class="title designSettingElement text-body viewDetail ckeditor-content"></div>
+            </div>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="reviewQna-info hide">
+
+
+        </div>
+
+
+        <div class="mobile-fixed-buy-button-box designSettingElement entire-background-color">
+            <button class="open-order-box-btn designSettingElement button">구매하기</button>
+        </div>
+        <div class="mobile-fixed-order-box content clearfix info designSettingElement entire-background-color">
+            <div class="close-btn">
+                <i class="designSettingElement text-assi icomoon-ic-close-small"></i>
+            </div>
+
+            <h1 id="shopProductNameClone"
+                class="name row designSettingElement productName">대나무 칫솔 4set</h1>
+
+            <div id="shopProductPriceClone" class="price row designSettingElement">
+
+
+                <span class="productPriceSpan">10,000원 </span>
+
+
+            </div>
+
+            <div id="productAdditionalInfoClone" class="row productInfo designSettingElement text-body">
+                <div id="shopProductAdditionalFixedOptionPriceDivClone"
+                     class="shopProductAdditionalFixedOptionPriceDiv hide">
+                    <span class="title">추가 금액</span>
+                    <span class="shopProductAdditionalFixedOptionPriceInfo description"></span>
+                </div>
+            </div>
+
+            <div class='shopProductOptionListDiv row selectOptions designSettingElement text-body'
+                 data-not-selling='false'>
+                <div class='custom-select-final-option'></div>
+                <div class='productOption custom-select-wrapper'><span class='custom-select-option-name'>색상</span>
+                    <div class='customSelectDiv designSettingElement shape custom-select-box' tabindex='0'><span
+                            class='customSelectDivLabel custom-select-box-label custom-select-selected-option-value'
+                            data-option-index='0' data-default-text='선택하세요.'>선택하세요.</span>
+                        <div class='selectBox designSettingElement shape entire-background-color custom-select-box-list custom-select-box-list-hide'
+                             data-option-index='0' data-option-arrangement='dropDown'>
+                            <div class='custom-select-box-list-overlay'></div>
+                            <div class='custom-select-box-list-inner'>
+                                <div class='custom-select-option' data-option-index='0'>
+                                    <div class='custom-select-option-info'
+                                         data-is-resetter='true'>선택하세요.
+                                    </div>
+                                </div>
+                                <div class='custom-select-option' data-option-index='0'
+                                     data-combined-option-value-no='6673034' data-option-value='화이트 4개'
+                                     data-soldout='false' data-option-no='12199332' data-option-quantity='-1'
+                                     data-option-price='0.0' data-option-options='' data-mini-cart-trigger='true'>
+                                    <div class='custom-select-option-info'>
+                                        화이트 4개
+                                    </div>
+                                </div>
+                                <div class='custom-select-option' data-option-index='0'
+                                     data-combined-option-value-no='6673035' data-option-value='블랙 4개'
+                                     data-soldout='false' data-option-no='12199333' data-option-quantity='-1'
+                                     data-option-price='0.0' data-option-options='' data-mini-cart-trigger='true'>
+                                    <div class='custom-select-option-info'>
+                                        블랙 4개
+                                    </div>
+                                </div>
+                                <div class='custom-select-option' data-option-index='0'
+                                     data-combined-option-value-no='6673036' data-option-value='화이트 2개 + 블랙 2개'
+                                     data-soldout='false' data-option-no='12199334' data-option-quantity='-1'
+                                     data-option-price='0.0' data-option-options='' data-mini-cart-trigger='true'>
+                                    <div class='custom-select-option-info'>
+                                        화이트 2개 + 블랙 2개
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="miniCart-wrapper row designSettingElement text-body hide">
+                <div class="miniCart-product-info designSettingElement shape">
+                </div>
+                <div class="miniCart-total-price-wrapper designSettingElement text-body">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+
+            <div id="shopProductCartErrorDivClone"
+                 class="shopProductCartErrorDiv row designSettingElement text-body hide">
+                <span class="text">품절된 상품입니다.</span>
+            </div>
+
+            <div id="productActionButtonDivClone"
+                 class="productActionButtonDiv row designSettingElement entire-background-color">
+
+
+                <div class="normalButton">
+                    <div class="btn-wrapper buyButton">
+                        <button id="btn_buyNowClone"
+                                class="buyNow designSettingElement button "
+                                data-is-mini-cart-available="true">
+                            구매하기
+                        </button>
+                    </div>
+                    <div class="btn-wrapper cartButton">
+                        <button id="btn_addToCartClone"
+                                class="addToCart designSettingElement button outline "
+                                data-is-mini-cart-available="true">
+                            장바구니에 담기
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
     </div>
 
     <div class="hide">

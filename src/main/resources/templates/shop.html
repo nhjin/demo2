@@ -2824,15 +2824,35 @@
     $(document).ready(function () {
         console.log("Ready!");
 
-        let selectCategory = $('.productListFilter-navi')
+        let uid = "[[${session.uid}]]"
+        console.log(uid)
+        if(!(uid == "")){
+            let loginBtn = $('.headerCustomerContent')
 
-        // alert(selectCategory.length)
-        selectCategory.each(function (i){
-            if((($(this).text()).toUpperCase()).indexOf("[[${param.category}]]".toUpperCase()) != -1){
-                $('.productListFilter-navi').attr('class', 'productListFilter-navi')
-                $(this).attr('class', 'productListFilter-navi now')
-                console.log($(this).text())
+            loginBtn.each(function (i){
+                if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                    $(this).text("MY PAGE")
+                }
+            });
+        }
+
+        var popupWidth = 300;
+        var popupHeight = 400;
+
+        var popupX = (window.screen.width / 2) - (popupWidth / 2);
+        // 만들 팝업창 width 크기의 1/2 만큼 보정값으로 빼주었음
+
+        var popupY= (window.screen.height / 2) - (popupHeight / 2);
+        // 만들 팝업창 height 크기의 1/2 만큼 보정값으로 빼주었음
+
+        $('.headerCustomerContent').mousedown(function(){
+            // console.log(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1)
+            if(($(this).text()).toUpperCase().indexOf("log in".toUpperCase()) != -1){
+                window.open("../start", "login", "width=300px, height=400px, left=" + popupX + "px, top=" + popupY +"px, resizable=0");
+            }else if(($(this).text()).toUpperCase().indexOf("my page".toUpperCase()) != -1){
+                location = "./mypage"
             }
+            return false;
         });
 
         let Category = "";
@@ -2841,6 +2861,18 @@
         }else {
             Category = "[[${param.category}]]";
         }
+
+        let selectCategory = $('.productListFilter-navi')
+
+        // alert(selectCategory.length)
+        selectCategory.each(function (i){
+            if((($(this).text()).toUpperCase()).indexOf(Category.toUpperCase()) != -1){
+                console.log(((($(this).text()).toUpperCase()).indexOf(Category.toUpperCase()) != -1))
+                $('.productListFilter-navi').attr('class', 'productListFilter-navi')
+                $(this).attr('class', 'productListFilter-navi now')
+                console.log($(this).text())
+            }
+        });
 
         var idNum = 999999999;
 

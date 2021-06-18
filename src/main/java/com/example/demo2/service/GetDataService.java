@@ -46,7 +46,7 @@ public class GetDataService {
 
         CollectionReference foodData = dbFirestore.collection("KFD");
         if (num == 0) {
-            Query query = foodData.orderBy("Number").startAt(num).limit(1000);
+            Query query = foodData.orderBy("Number").startAt(num).limit(300);
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
             List<KorData> korDataList = new ArrayList<>();
@@ -61,7 +61,7 @@ public class GetDataService {
 
             return korDataList;
         } else {
-            Query query = foodData.orderBy("Number").startAfter(num).limit(10);
+            Query query = foodData.orderBy("Number").startAfter(num).limit(300);
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
             List<KorData> korDataList = new ArrayList<>();

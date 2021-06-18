@@ -6,42 +6,57 @@
     <meta charset="UTF-8">
 </head>
 <script>
-    $(document).ready(function () {
-        // console.log("시발진짜...")
+    $(document).ready(function (){
 
         var age = $("#age").html(); // session
         var gender = $("#gender").html();
-        // console.log("된건가요?" + age)
 
         $.ajax({
-            url: "/next/get/" + gender + "/" + age,
+            url: "/next/get/"+gender+"/"+age,
             type: "get",
             dataType: 'json'
-        }).done(function (json) {
-            // console.log(json)
+        }).done(function (json){
             $("#car").val(json.car)
             $("#pro").val(json.pro)
             $("#fat").val(json.fat)
-        }).fail(function (er) {
+        }).fail(function (er){
             console.log(er)
         })
+
+        window.onload = function () {
+            var auto = setTimeout(function () {
+                autoRefresh();
+            }, 100);
+
+            function submitform() {
+                alert('로딩중입니다');
+                document.getElementById("personnutri").submit();
+            }
+
+            function autoRefresh() {
+                clearTimeout(auto);
+                auto = setTimeout(function () {
+                    submitform();
+                    autoRefresh();
+                }, 4000);
+            }
+        }
+
     });
 </script>
-
-<h2 id="age" th:text="${session.age}"></h2>
-<h2 id="gender" th:text="${session.gender}"></h2>
+<p><div style="display: none;" id="age" th:text="${session.age}"></div></p>
+<p><div style="display: none;" id="gender" th:text="${session.gender}"></div></p>
 
 <body>
 
 
-<form id="userinfo" th:action="@{/getdata}" th:object="${nutrition}" method="post">
-    <h2 id="uid" th:text="${session.uid}"></h2>
-    <p><input type="text" id="car" th:field="*{car}"/></p>
-    <p><input type="text" id="pro" th:field="*{pro}"/></p>
-    <p><input type="text" id="fat" th:field="*{fat}"/></p>
+<form id="personnutri" th:action="@{/getdata}" th:object="${nutrition}" method="post">
+    <p> <input type="hidden" id="car" th:field="*{car}" /></p>
+    <p> <input type="hidden" id="pro" th:field="*{pro}"/></p>
+    <p> <input type="hidden" id="fat" th:field="*{fat}"/></p>
     <!--    <p> <input type="text" id="kcal" th:field="*{kcal}"/></p>-->
     <!--    <p> <input type="text" id="na" th:field="*{na}"/></p>-->
-    <p><input type="submit" value="Submit"/>
+    <!--    <p><input type="submit" value="Submit"/>-->
 </form>
 </body>
 </html>

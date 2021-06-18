@@ -2,42 +2,264 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://thymeleaf.org">
 <head>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
     <meta charset="UTF-8">
 </head>
 <script>
-    $(document).ready(function (){
+    var selectedFoodsArr = [];
+    let userCar = 0;
+    let userPro = 0;
+    let userFat = 0;
+    var selectedPro = 0;
+    var selectedCar = 0;
+    var selectedFat = 0;
+    let resultCar = 0;
+    let resultPro = 0;
+    let resultFat = 0;
 
-        var uid = $("#uid").html(); // session
+    var globJason = [];
+
+    let searchNum = 0;
+
+    $(document).ready(function () {
+        var selectedNum = 0;
+
+        let age = ""
+        let gender = ""
+
+        var uid = "[[${session.uid}]]" // session
         console.log("된건가요?" + uid)
 
         $.ajax({
             url: "/next/get/" + uid,
             type: "get",
             dataType: 'json'
-        }).done(function (json){
-            console.log("될거야")
-            $("#gender").val(json.gender)
-            $("#age").val(json.age)
-        }).fail(function (er){
+        }).done(function (json) {
+            gender = json.gender
+            age = json.age
+            calc(gender, age)
+        }).fail(function (er) {
             console.log(er)
         })
+
+        function calc(gender, age) {
+            $.ajax({
+                url: "/next/get/" + gender + "/" + age,
+                type: "get",
+                dataType: 'json'
+            }).done(function (json) {
+                $("#userCar").val(json.car)
+                userCar = json.car
+                $("#userPro").val(json.pro)
+                userPro = json.pro
+                $("#userFat").val(json.fat)
+                userFat = json.fat
+            }).fail(function (er) {
+                console.log(er)
+            })
+        }
+
+        function serchNumReset(srchNum) {
+            searchNum = srchNum + 1;
+            console.log(searchNum)
+        }
+
+        $("#search").keydown(function (key) {
+            if (key.keyCode == 13) {
+                //초기화
+                // selectedPro = 0;
+                // selectedCar = 0;
+                // selectedFat = 0;
+                searchNum = 0;
+                // $("#pro").val(selectedPro);
+                // $("#car").val(selectedCar);
+                // $("#fat").val(selectedFat);
+                // $("#selFoodNm").text("선택한 음식 : ");
+                $('#result').empty()
+                LoadingWithMask();
+                SearchProduct(searchNum);
+            }
+        });
+
+        $("#btnSearch").mousedown(function () {
+            SearchProduct(searchNum);
+        });
+
+        function fnAddsFoods(foodId) {
+            selectedFoodsArr.push(foodId);
+
+            selectedPro += Number(globJason[foodId].pro);
+            selectedCar += Number(globJason[foodId].car);
+            selectedFat += Number(globJason[foodId].fat);
+
+            $("#pro").val(selectedPro.toFixed(1));
+            $("#car").val(selectedCar.toFixed(1));
+            $("#fat").val(selectedFat.toFixed(1));
+
+            $("#selFoodNm").append(globJason[foodId].name + " ");
+        }
+
+        function SearchProduct(searchNum) {
+            console.log(searchNum)
+            //초기화
+            // selectedPro = 0;
+            // selectedCar = 0;
+            // selectedFat = 0;
+            // $("#pro").val(selectedPro);
+            // $("#car").val(selectedCar);
+            // $("#fat").val(selectedFat);
+            // $("#selFoodNm").text("선택한 음식 : ");
+
+            let SearchTxt = $("#search").val().replace(/ /g,"");
+            console.log(SearchTxt);
+            $.ajax({
+                url: "/next/list/" + searchNum,
+                type: 'get',
+                dataType: "json"
+            }).done(function (json) {
+
+                serchNumReset(searchNum);
+
+                var i = 0;
+                globJason = json;
+
+                // *  $('#result')
+                // * 여기다가 div 안에 있는 텍스트 타 지워버리는걸 만드세요~!
+
+                // console.log(json[0]);
+                //이름으로 검색,
+                //인덱스 값
+
+                while (json.length) {
+                    // var str = JSON.stringify(json[i].name)
+                    //console.log(json[i].name)
+                    //console.log(json[i].name.includes(SearchTxt))
+
+                    if (json[i].name.replace(/ /g,"").includes(SearchTxt)) {
+                        $('#result').append('<button class="foodBtn" id="' + json[i].number + '"> 선택 </button>');
+                        $('#result').append('<div class="result" id="name">' + "음식이름 : " + json[i].name + '</div>');
+                        $('#result').append('<div class="result" id="description">' + "탄수화물 : " + json[i].car + " 단백질 : " + json[i].pro + " 지방 : " + json[i].fat + '</div>');
+                    }
+                    if (i == json.length - 1) {
+                        break;
+                    }
+                    i++;
+                    $("#mask").remove()
+                }
+
+                $(".foodBtn").mousedown(function () {
+                    console.log($(this).attr("id"));
+                    var foodId = $(this).attr("id");
+
+                    // alert(foodId);
+                    fnAddsFoods(foodId);
+                });
+
+                $('#result').append('<button id="btnMore">MORE</button>')
+                console.log("야")
+
+                // $('#result').append('<button id="btnMore">MORE</button>')
+                ///*******여기다가 리셋버튼 한 번 만들어보고 취소버튼도 만들어보고...이거 한 번 츄라이는 해보자...근데 될란가 모르겠는데 또... 그...아...? 어..그래...
+
+                $("#btnMore").mousedown(function () {
+                    $(this).remove();
+                    console.log("작동해라")
+                    SearchProduct(searchNum);
+                });
+
+                console.log(json.length)
+                console.log(json[0])
+                //console.log(json[0].number)
+                searchNum = json[19999].number; //담기
+                console.log(searchNum)
+
+                // passtocalculator(json)
+                // SearchProduct(searchNum);
+            }).fail(function () {
+                alert("다시 입력하세요.")
+            });
+        }
+
+        $("#calc").mousedown(function () {
+            resultCar = (userCar - selectedCar)/2
+            resultPro = (userPro - selectedPro)/2
+            resultFat = (userFat - selectedFat)/2
+            console.log("result : car : " + resultCar + " pro : " + resultPro + " fat : " + resultFat)
+
+            $.ajax({
+                url: "/api/calc/"+resultCar+"/"+resultPro+"/"+resultFat,
+                type: 'get',
+                dataType: "json"
+            }).done(function (json) {
+                var i = 0;
+                while(json.length) {
+
+                    $("#id").val(json[i].id)
+                    console.log(json[i])
+
+                    if (i == json.length - 1) {
+                        break;
+                    }
+                    i++;
+                }
+            }).fail(function () {
+                alert("다시 입력하세요.")
+            });
+
+        });
+
+        function LoadingWithMask() {
+            //화면의 높이와 너비를 구합니다.
+            var maskHeight = $(document).height();
+            var maskWidth  = window.document.body.clientWidth;
+
+            //화면에 출력할 마스크를 설정해줍니다.
+            var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+            var loadingImg = '';
+
+            loadingImg += "<div id='loadingImg'><img src='file:/Users/yunhyunsoo/IdeaProjects/demo2/src/main/resources/HfixyOj.gif' style='position: relative; display: block; margin: 0px auto;'/></div>"
+
+            //화면에 레이어 추가
+            $('body').append(loadingImg)
+            $('body').append(mask)
+
+            //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채웁니다.
+            $('#mask').css({
+                'width' : maskWidth,
+                'height': maskHeight,
+                'opacity' : '0.3'
+            });
+
+            //마스크 표시
+            $('#mask').show();
+
+            //로딩중 이미지 표시
+            $('#loadingImg').show();
+        }
     });
-
 </script>
-<!--    <title>Title</title>-->
-<!--<h2 id="uid" th:text="${session.uid}"> </h2>-->
-<!--<input type="text" id="gender">-->
-<!--<input type="text" id="age">-->
 
-
-<form id="userinfo" th:action="@{/puinfo}" th:object="${user}" method="post">
-<h2 id="uid" th:text="${session.uid}"> </h2>
-    <p> <input type="text" th:field="*{gender}" id="gender"/></p>
-    <p> <input type="text" id="age" th:field="*{age}"/></p>
-    <p><input type="submit" value="Submit"/>
-</form>
 </head>
+
 <body>
+<input id="userCar"/>
+<br>
+<input id="userPro"/>
+<br>
+<input id="userFat"/>
+<br>
+<br>
+<input type="text" name="search" id="search">검색<br>
+<button id="btnSearch">SEARCH</button>
+<p id="selFoodNm">선택한 음식 : </p>
+<!--<form id="cal" th:action="@{/her}" th:object="${kordata}" method="post">-->
+    <p>탄수화물 : <input id="car" name="car" type="text"/></p>
+    <p>단백질 : <input id="pro" name="pro" type="text"/></p>
+    <p>지방 : <input id="fat" name="car" type="text"/></p>
+<input id="calc" type="button" value="계산"/>
+<!--</form>-->
+<div id="result"></div>
+
+
 </body>
 </html>

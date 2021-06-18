@@ -58,7 +58,7 @@ public class HomeController {
 
 //** 데이터 테스트 레스트 컨트롤러 **//
 
-    @GetMapping("/the/{NUM}") //이거를 컨테인으로 바꿔야하나? 글자를 포함하는 함수로 바꾸고 id값이 아니라 name값으로 검색이 되도록 해야하는건가?
+    @GetMapping("/list/{NUM}") //이거를 컨테인으로 바꿔야하나? 글자를 포함하는 함수로 바꾸고 id값이 아니라 name값으로 검색이 되도록 해야하는건가?
     public List<KorData> getFoodData(@PathVariable int NUM) throws InterruptedException, ExecutionException {
 
         return getDataService.getFoodData(NUM);

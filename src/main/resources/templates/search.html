@@ -2812,6 +2812,7 @@
     </style>
     <script>
         $(document).ready(function () {
+
             let uid = "[[${session.uid}]]"
             console.log(uid)
             if(!(uid == "")){
@@ -2843,8 +2844,36 @@
                 return false;
             });
 
+            var search = "[[${search}]]"
+            // console.log(typeof search)
+            $("#searchProductInput").val(search)
+
+
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    if(!($(".searchProductResult").attr('class') === "searchProductResult field")){
+                        if($('#done').length > 0){
+                            $('#done').remove()
+                            $("#itemElement25397969").append("<hr id='done'>");
+                        }else{
+                            $("#itemElement25397969").append("<hr id='done'>");
+                        }
+                    }
+                }
+            });
+
+            SearchProduct(search)
+            // searchNoResult(search)
+
+            function searchNoResult(search) {
+                $(".resultString").text(search)
+                $(".searchProductResult").attr('class', 'searchProductResult field')
+                $("#resultField").attr('class', 'row result no-result')
+            }
+
             $(".headerProductSearchContent").mousedown(function (){
-                console.log('hi')
+                // console.log('hi')
                 $("#headerProductSearch").attr('class', 'headerProductSearch desktop site-element-child search-input-box-active')
                 $(".headerProductSearchContent").attr('class', 'headerProductSearchContent hide')
                 $("#headerCustomer").attr('class', 'headerCustomer desktop site-element-child hide')
@@ -2865,10 +2894,68 @@
             $(".searchPro").keydown(function (key) {
                 if (key.keyCode == 13) {
                     let searchText = $(this).val()
-
-                    location = "./search/" + searchText
+                    location = "../search/" + searchText
                 }
             });
+
+            $("#searchProductInput").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    let searchText = $(this).val()
+                    location = "../search/" + searchText
+                }
+            });
+
+            function SearchProduct(category) {
+                $.ajax({
+                    url: "/api/products/search/" + category,
+                    type: 'get',
+                    dataType: "json",
+                    success: function (json) {
+                        MakeDiv(json)
+                    },
+                    error: function () {
+                    }
+                });
+            }
+
+            function MakeDiv(json) {
+                var k = 0;
+                for (j = 0; j < json.length; j++) {
+                    if(search.toUpperCase().indexOf("flex".toUpperCase()) != -1 || search.toUpperCase().indexOf("Flex".toUpperCase()) != -1 || search.toUpperCase().indexOf("pesce".toUpperCase()) != -1 || search.toUpperCase().indexOf("Pesce".toUpperCase()) != -1 || search.toUpperCase().indexOf("Vege".toUpperCase()) != -1 || search.toUpperCase().indexOf("Vege".toUpperCase()) != -1 || search.toUpperCase().indexOf("vegan".toUpperCase()) != -1 || search.toUpperCase().indexOf("Vegan".toUpperCase()) != -1){
+                        DivTask(json[j], j)
+                    }else if((json[j].title).toUpperCase().indexOf(search.toUpperCase()) != -1) {
+                        DivTask(json[j], k)
+                        k++
+                    }
+                }
+                if(k == 0){
+                    searchNoResult(search)
+                }
+            }
+
+            function DivTask(json, k) {
+                var id = json.id
+                var image = json.image
+                var title = json.title
+
+                try {
+                    setTimeout(function () {
+                        var item = $("<div class='shopProductWrapper' data-productNo=" + id + ">" +
+                            "<a href='/recipes/" + id + "'><div class='thumbDiv'>" +
+                            "<div class='thumb img' " +
+                            "style='width:100%;background-image:url(" + image + "')>" +
+                            "</div><div class='shopProductBackground'></div></div><div class='shopProductNameAndPriceDiv'>" +
+                            "<div class='shopProductNameAndPriceContent'><div class='shopProductNameAndPrice'>" +
+                            "<div class='shopProduct productName'>" + title + "</div>" +
+                            "<div class='shopProduct price'>&nbsp;</div></div></div></div></a></div>").hide()
+                        $(".productListPage").append(item);
+                        // alert("task : "+String(j))
+                        item.fadeIn(500);
+                    }, 200 * k);
+                } catch (e) {
+                    alert(e)
+                }
+            }
         });
     </script>
 </head>
@@ -2944,7 +3031,7 @@
         <div class="mobileSideMenu">
             <div class="headerLogoInMobileMenuWrapper">
                 <a id="headerLogoInMobileMenu" class="bottom"
-                   href="./home"
+                   href="../home"
                 >
                     <h1 class="site-name">Vegan Again</h1>
 
@@ -2972,21 +3059,21 @@
         <ul class="headerMenuListContents mobile">
 
             <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="ABOUT"
-                                                                              href="./about">ABOUT</a>
+                                                                              href="../about">ABOUT</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
                 </div>
             </li>
             <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="SHOP"
-                                                                              href="./recipes">RECIPES</a>
+                                                                              href="../recipes">RECIPES</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
                 </div>
             </li>
             <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="BLOG"
-                                                                              href="./recommend">RECOMMEND</a>
+                                                                              href="../recommend">RECOMMEND</a>
                 <div class="menu-opener"></div>
                 <div class="subMenuNaviListDiv">
                     <ul class="subMenuNaviList"></ul>
@@ -3024,7 +3111,7 @@
             <div class="column header-left">
 
 
-                <a href="./home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
+                <a href="../home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
 
 
                     <h1 class="site-name">Vegan Again</h1>
@@ -3043,21 +3130,21 @@
                     <ul class="headerMenuListContents desktop">
 
                         <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="ABOUT"
-                                                                                          href="./about">ABOUT</a>
+                                                                                          href="../about">ABOUT</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
                             </div>
                         </li>
                         <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="SHOP"
-                                                                                          href="./recipes">RECIPES</a>
+                                                                                          href="../recipes">RECIPES</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
                             </div>
                         </li>
                         <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name" alt="BLOG"
-                                                                                          href="./recommend">RECOMMEND</a>
+                                                                                          href="../recommend">RECOMMEND</a>
                             <div class="menu-opener"></div>
                             <div class="subMenuNaviListDiv">
                                 <ul class="subMenuNaviList"></ul>
@@ -3117,7 +3204,7 @@
             <div class="column header-left">
 
 
-                <a href="./home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
+                <a href="../home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
 
 
                     <h1 class="site-name">Vegan Again</h1>
@@ -3179,7 +3266,7 @@
                 <div class="column header-left">
 
 
-                    <a href="./home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
+                    <a href="../home" id="headerLogo" class="headerLogo desktop site-element" data-itemType="logo">
 
 
                         <h1 class="site-name">Vegan Again</h1>
@@ -3199,7 +3286,7 @@
 
                             <li data-pageno="1483815" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="ABOUT"
-                                                                                              href="./about">ABOUT</a>
+                                                                                              href="../about">ABOUT</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3207,7 +3294,7 @@
                             </li>
                             <li data-pageno="1483814" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="SHOP"
-                                                                                              href="./recipes">RECIPES</a>
+                                                                                              href="../recipes">RECIPES</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3215,7 +3302,7 @@
                             </li>
                             <li data-pageno="1483816" class="menu-navi menu-main pageMenu"><a class="menu-name"
                                                                                               alt="BLOG"
-                                                                                              href="./recommend">RECOMMEND</a>
+                                                                                              href="../recommend">RECOMMEND</a>
                                 <div class="menu-opener"></div>
                                 <div class="subMenuNaviListDiv">
                                     <ul class="subMenuNaviList"></ul>
@@ -3274,7 +3361,7 @@
                 <div class="column header-left">
 
 
-                    <a href="./home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
+                    <a href="../home" id="headerLogo" class="headerLogo mobile site-element" data-itemType="logo">
 
 
                         <h1 class="site-name">Vegan Again</h1>
@@ -3332,156 +3419,56 @@
 
     <div id="displayCanvas" class="desktop" data-viewport="desktop">
 
-
-        <div id='page1483815' cid='page1483815' class='page pagepage page-opened'>
-            <div id='sectionWrapper8635851' class='section-wrapper sectionWrapper8635851 null null' data-orderNo='1'
-                 cid='section8635851'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635851' class='section' data-orderNo='1'></section>
+        <div id="searchProduct" class="searchProduct wrapper page page-opened">
+            <div class="searchProduct field">
+                <div class="row search designSettingElement shape text-body">
+                    <div class="systemIcon searchIcon icomoon-search systemIconWeight_none"></div>
+                    <form action="" onsubmit="return false;">
+                        <input name="searchProductInput" id="searchProductInput" data-mini="true"/>
+                    </form>
+                </div>
             </div>
-            <div id='sectionWrapper8635852'
-                 class='section-wrapper sectionWrapper8635852 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='2' cid='section8635852'>
+            <div id='sectionWrapper8635849'
+                 class='section-wrapper sectionWrapper8635849 element-section productList-section' data-orderNo='3'
+                 cid='section8635849'>
                 <div class='section-background background-image'></div>
                 <div class='section-background background-color'></div>
                 <div class='section-background background-mask'></div>
                 <div class='section-background section-cover'></div>
-                <section id='section8635852' class='section' data-orderNo='2'>
-                    <div data-columnNo='1' id='section8635852_column1' class='customSectionColumn column-1'>
-                        <div id='item25397971' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635852'
-                             data-itemNo='25397971' cid='item25397971' style=''>
-                            <div id='itemElement25397971' class='item-element' style='height:32px;'></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div id='sectionWrapper8635853'
-                 class='section-wrapper sectionWrapper8635853 element-section gallery-section' data-orderNo='3'
-                 cid='section8635853'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635853' class='section widthWide' data-orderNo='3'>
-                    <div id='item25397972'
-                         class='item-wrapper gallery galleryGrid slide-hidden-contents-notUse centerMiddle c-1 c-1-mobile'
-                         data-type='item' data-itemType='gallery' data-orderNo='1' data-sectionNo='8635853'
-                         data-itemNo='25397972' cid='item25397972'>
-                        <div id='itemElement25397972' class='item-element'>
-                            <div class='galleryListDiv hover_noEffect noEffect ratio-7to3 borderMargin'>
-                                <div class='galleryWrapper image' data-gallerySequence='0'>
-                                    <div class='galleryThumbnail'>
-                                        <div class='galleryThumbnailContent'
-                                             style='background-image: url("https://contents.sixshop.com/thumbnails/uploadedFiles/18536/default/image_1480900035082_1500.jpg");'></div>
-                                        <div class='galleryBackground'></div>
-                                    </div>
-                                    <div class='galleryCaption'></div>
-                                </div>
+                <section id='section8635849' class='section' data-orderNo='3'>
+                    <div id='item25397969' class='item-wrapper productList' data-type='item' data-itemType='productList'
+                         data-orderNo='1' data-sectionNo='8635849' data-itemNo='25397969' cid='item25397969'>
+                        <div id='itemElement25397969' class='item-element filter-use'>
+                            <div id='productListWrapper25397969' class='productListWrapper c-3 ratio-4to3'
+                                 data-imgWidth='1000'>
+                                <div class='productListPage productListPage-1 now'></div>
                             </div>
-                        </div>
-                    </div>
                 </section>
             </div>
-            <div id='sectionWrapper8635854'
-                 class='section-wrapper sectionWrapper8635854 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='4' cid='section8635854'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635854' class='section' data-orderNo='4'>
-                    <div data-columnNo='1' id='section8635854_column1' class='customSectionColumn column-1'>
-                        <div id='item25397973' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635854'
-                             data-itemNo='25397973' cid='item25397973' style=''>
-                            <div id='itemElement25397973' class='item-element' style='height:32px;'></div>
-                        </div>
-                        <div id='item25397974' class='item-wrapper text-title' data-type='item'
-                             data-itemType='text-title' data-orderNo='2' data-sectionNo='8635854' data-itemNo='25397974'
-                             cid='item25397974' style=''>
-                            <div id='itemElement25397974' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">Healthy living and eating habits brand,
-                                <span text-style-option="fontStyleBold" style="font-weight: bold;">Vegan Again</span></p></div>
-                        </div>
-                        <div id='item25397975' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='3' data-sectionNo='8635854'
-                             data-itemNo='25397975' cid='item25397975' style=''>
-                            <div id='itemElement25397975' class='item-element' style='height:0px;'></div>
+            <div class="searchProductResult field hide">
+                <div class="content designSettingElement text-body">
+                    <div id="resultField" class="row result no-result hide">
+                        <div class="result-wrapper">
+
+                            There is no corresponding product search result on the "
+                            <span class="resultString"></span>
+                            ".
+
                         </div>
                     </div>
-                </section>
-            </div>
-            <div id='sectionWrapper8635855'
-                 class='section-wrapper sectionWrapper8635855 custom-section custom-section sectionColumn-2 custom-reverse-left-and-right-notUse'
-                 data-orderNo='5' cid='section8635855'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635855' class='section' data-orderNo='5'>
-                    <div data-columnNo='1' id='section8635855_column1' class='customSectionColumn column-1'>
-                        <div id='item25397976' class='item-wrapper text-body' data-type='item' data-itemType='text-body'
-                             data-orderNo='1' data-sectionNo='8635855' data-itemNo='25397976' cid='item25397976'
-                             style=''>
-                            <div id='itemElement25397976' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">
-                                "There is nothing like evolution into a vegetarian diet that helps human health and increases the chances of surviving on Earth."<br>
-                                - Albert Einstein <br>
-                                <br>
-                                "If the slaughterhouse walls were made of glass, everyone would be vegetarian."<br>
-                                - Paul McCartney <br>
-                                <br>
-                                "Vegetable eating has a huge impact on not only health and physical vitality but also on mind and behavior."<br>
-                                - Thomas Edison<br>
-                            </p></div>
-                        </div>
-                        <div id='item25397977' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='2' data-sectionNo='8635855'
-                             data-itemNo='25397977' cid='item25397977' style=''>
-                            <div id='itemElement25397977' class='item-element' style='height:0px;'></div>
+                    <div class="row result exist-result">
+                        <div id="searchProductResultSection" class="section-wrapper sectionWrapper1 element-section productList-section" data-type="section" data-sectionno="1" data-orderno="1" cid="section1">
+                            <section id="section1" class="section" data-orderno="1">
+                                <div id="item1" class="item-wrapper productList" data-type="item" data-itemtype="productList" data-orderno="1" data-sectionno="1" data-itemno="1" cid="item1">
+                                    <div id="itemElement1" class="item-element"></div>
+                                </div>
+                            </section>
                         </div>
                     </div>
-                    <div data-columnNo='2' id='section8635855_column2' class='customSectionColumn column-2'>
-                        <div id='item25397978' class='item-wrapper text-body' data-type='item' data-itemType='text-body'
-                             data-orderNo='3' data-sectionNo='8635855' data-itemNo='25397978' cid='item25397978'
-                             style=''>
-                            <div id='itemElement25397978' class='item-element' style=''><p style="text-align: left;"
-                                                                                           class="">
-                                "As long as there is a slaughterhouse, the war will not go away."<br>
-                                - Tolstoy<br>
-                                <br>
-                                "If we continue to pursue meat eating, it will be difficult to achieve happiness and therefore will not be able to achieve the right society."<br>
-                                - Socrates<br>
-                                <br>
-                                "As I did, there will be a day when other people will think of killing animals the same as killing today."<br>
-                                - Leonardo da Vinci <br>
-                                <br></p></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div id='sectionWrapper8635856'
-                 class='section-wrapper sectionWrapper8635856 custom-section custom-section sectionColumn-1 custom-reverse-left-and-right-notUse'
-                 data-orderNo='6' cid='section8635856'>
-                <div class='section-background background-image'></div>
-                <div class='section-background background-color'></div>
-                <div class='section-background background-mask'></div>
-                <div class='section-background section-cover'></div>
-                <section id='section8635856' class='section' data-orderNo='6'>
-                    <div data-columnNo='1' id='section8635856_column1' class='customSectionColumn column-1'>
-                        <div id='item25397979' class='item-wrapper spacer-element' data-type='item'
-                             data-itemType='spacer-element' data-orderNo='1' data-sectionNo='8635856'
-                             data-itemNo='25397979' cid='item25397979' style=''>
-                            <div id='itemElement25397979' class='item-element' style='height:68px;'></div>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
         </div>
+
     </div>
 
     <div class="hide">

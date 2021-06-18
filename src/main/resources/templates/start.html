@@ -11,19 +11,52 @@
     <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase.js"></script>
     <script src="config.js"></script>
     <script src="common.js"></script>
-    <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="style.css" rel="stylesheet" type="text/css" media="screen"/>
     <!-- <script src="dist/firebaseui.js"></script> -->
     <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.6/webfont.js?v=04081515"></script>
+    <script>WebFont.load({google: {families: ['Poppins:500,600,300,400,700']}});</script>
+    <!--    <script src="https://static.sixshop.com/resources/libs/js/jquery-1.12.4.min.js?v=04081515"></script>-->
+    <link href="https://static.sixshop.com/resources/build/display-main-built.css?v=04081515"
+          rel="stylesheet" type="text/css"/>
 </head>
+<script>
+    $(document).ready(function () {
+
+        $(window).on("beforeunload", function() {
+            opener.parent.location.reload();
+        });
+
+        let uid = "[[${session.uid}]]"
+        console.log(uid)
+
+        $("#close").mousedown(function () {
+            opener.parent.location.reload();
+            self.close();
+        });
+
+        $("#sign-out").mousedown(function () {
+            $.ajax({
+                url: "/api/logout",
+                type: "post",
+            }).done(function () {
+            }).fail(function () {
+
+            });
+        });
+    });
+</script>
 <body>
 <div id="container">
-    <h3>FirebaseUI Demo</h3>
+    <br>
+    <br>
+    <h3 style="font-size: 35px; height: 50px">Log In</h3>
     <!--테스트버튼-->
-    <input type="button" onclick="javascript:location.href='./list'" value="golist">
-    <input type="button" onclick="javascript:location.href='./getuid'" value="getuid">
+    <input type="hidden" onclick="javascript:location.href='./list'" value="golist">
+    <input type="hidden" onclick="javascript:location.href='./getuid'" value="getuid">
     <div id="loading">Loading...</div>
     <div id="loaded" class="hidden">
         <div id="main">
@@ -42,10 +75,13 @@
                     <button id="sign-out">Sign Out</button>
                     <button id="delete-account">Delete account</button>
                 </p>
+                <br>
+                <br>
+                <button id="close">close</button>
             </div>
             <div id="user-signed-out" class="hidden">
                 <h4>You are signed out.</h4>
-                <fieldset>
+                <fieldset style="display: none">
                     <legend>Configuration</legend>
                     reCAPTCHA mode for Phone Auth:
                     <label for="recaptcha-normal">
@@ -71,11 +107,11 @@
                     <input type="checkbox" id="email-disableSignUp-status" name="disableEmailSignUpStatus">
                 </fieldset>
                 <p>
-                    <button id="sign-in-with-redirect">Sign In with Redirect</button>
-                    <button id="sign-in-with-popup">Sign In with Popup</button>
+                    <button style="display: none" id="sign-in-with-redirect">Sign In with Redirect</button>
+                    <button style="display: none" id="sign-in-with-popup">Sign In with Popup</button>
                 </p>
                 <div id="firebaseui-spa">
-                    <h5>Single Page Application mode:</h5>
+                    <!--                    <h5>Single Page Application mode:</h5>-->
                     <div id="firebaseui-container"></div>
                 </div>
             </div>
